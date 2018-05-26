@@ -3,7 +3,6 @@
 //  SwuxExample
 //
 //  Created by Tim Vermeulen.
-//  Copyright © 2018 Wircho. All rights reserved.
 //
 //  CREDIT: Tim Vermeulen
 
