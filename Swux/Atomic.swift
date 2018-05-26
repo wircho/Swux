@@ -2,9 +2,10 @@
 //  Atomic.swift
 //  SwuxExample
 //
-//  Created by Adolfo Rodriguez on 2018-05-26.
+//  Created by Tim Vermeulen.
 //  Copyright © 2018 Wircho. All rights reserved.
 //
+//  CREDIT: Tim Vermeulen
 
 import Foundation
 
