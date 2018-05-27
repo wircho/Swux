@@ -12,6 +12,14 @@ func +(lhs: CGPoint, rhs: CGVector) -> CGPoint {
     return CGPoint(x: lhs.x + rhs.dx, y: lhs.y + rhs.dy)
 }
 
+func -(lhs: CGPoint, rhs: CGPoint) -> CGVector {
+    return CGVector(dx: lhs.x - rhs.x, dy: lhs.y - rhs.y)
+}
+
+func -(lhs: CGSize, rhs: CGSize) -> CGVector {
+    return CGVector(dx: lhs.width - rhs.width, dy: lhs.height - rhs.height)
+}
+
 func abs(_ vector: CGVector) -> CGFloat {
     return sqrt(vector.dx * vector.dx + vector.dy * vector.dy)
 }
@@ -19,8 +27,9 @@ func abs(_ vector: CGVector) -> CGFloat {
 private let bounceDecrease: CGFloat = 0.8
 private let dragDecrease: CGFloat = 0.95
 private let dragDistance: CGFloat = 1
-private let gravity: CGFloat = 0.1
+private let gravity: CGFloat = 0.2
 private let minimumSpeed: CGFloat = 0.1
+private let importantSizeChange: CGFloat = 0.5
 
 internal struct AppState {
     var canvasSize: CGSize
@@ -48,7 +57,7 @@ internal struct Jump: WrappedStateActionProtocol {
     typealias State = AppState?
     func mutateWrapped(_ state: inout AppState) {
         guard state.ballSpeed == nil else { return }
-        let r = drand48()
+        let r = 2 * drand48() - 1
         state.ballSpeed = CGVector(dx: CGFloat(r > 0 ? 15 + r * 10 : -15 + r * 10), dy: -20)
     }
 }
@@ -87,6 +96,23 @@ internal struct NextFrame: WrappedStateActionProtocol {
         }
         state.ballCenter = targetCenter
         state.ballSpeed = abs(ballSpeed) < minimumSpeed && floorDistance < dragDistance ? nil : ballSpeed
+    }
+}
+
+internal struct ChangeCanvasSize: WrappedStateActionProtocol {
+    typealias State = AppState?
+    let size: CGSize
+    func mutateWrapped(_ state: inout AppState) {
+        let oldSize = state.canvasSize
+        state.canvasSize = size
+        guard abs(size - oldSize) > importantSizeChange else { return }
+        let left = state.ballCenter.x - state.ballRadius
+        let top = state.ballCenter.y - state.ballRadius
+        let right = oldSize.width - state.ballCenter.x - state.ballRadius
+        let bottom = oldSize.height - state.ballCenter.y - state.ballRadius
+        let newX = (state.canvasSize.width - 2 * state.ballRadius) * left / (left + right) + state.ballRadius
+        let newY = (state.canvasSize.height - 2 * state.ballRadius) * top / (top + bottom) + state.ballRadius
+        state.ballCenter = CGPoint(x: newX, y: newY)
     }
 }
 

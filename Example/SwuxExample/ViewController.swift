@@ -12,7 +12,9 @@ private let ballRadius: CGFloat = 20
 
 class ViewController: UIViewController, SubscriberProtocol {
     @IBOutlet weak var canvasView: UIView?
+    @IBOutlet weak var jumpButton: UIButton?
     weak var _ballView: UIView? = nil
+    var timer: Timer?
     var ballView: UIView {
         get {
             guard let _ballView = _ballView else {
@@ -26,21 +28,25 @@ class ViewController: UIViewController, SubscriberProtocol {
             return _ballView
         }
     }
-    var timer: Timer?
     
-    @IBOutlet weak var jumpButton: UIButton?
-    @IBAction func tapJump(_ sender: UIButton) {
-        store.dispatch(Jump())
-    }
-    
+    var subscribed = false
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard let canvasView = canvasView else { return }
+        guard !subscribed , let canvasView = canvasView else { return }
+        subscribed = true
         store.subscribe(self)
-        timer = timer ?? Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { _ in
-            store.dispatch(NextFrame())
-        }
+        timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { _ in store.dispatch(NextFrame()) }
         store.dispatch(Start(canvasSize: canvasView.bounds.size, ballRadius: ballRadius))
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let canvasView = canvasView else { return }
+        store.dispatch(ChangeCanvasSize(size: canvasView.bounds.size))
+    }
+    
+    @IBAction func tapJump(_ sender: UIButton) {
+        store.dispatch(Jump())
     }
     
     func stateChanged(to newState: AppState?) {
