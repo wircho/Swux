@@ -25,7 +25,7 @@ func abs(_ vector: CGVector) -> CGFloat {
 }
 
 private let bounceDecrease: CGFloat = 0.8
-private let otherBounceDecrease: CGFloat = 0.9
+private let otherBounceDecrease: CGFloat = 0.95
 private let dragDistance: CGFloat = 1
 private let gravity: CGFloat = 0.2
 private let minimumSpeed: CGFloat = 0.1
