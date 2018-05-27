@@ -81,11 +81,12 @@ internal struct NextFrame: WrappedStateActionProtocol {
             targetCenter.y = 2 * (state.canvasSize.height - state.ballRadius) - targetCenter.y
             ballSpeed.dy = -ballSpeed.dy * bounceDecrease
         }
-        if (abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height) < dragDistance) {
+        let floorDistance = abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height)
+        if (floorDistance < dragDistance) {
             ballSpeed.dx *= dragDecrease
         }
         state.ballCenter = targetCenter
-        state.ballSpeed = abs(ballSpeed) < minimumSpeed ? nil : ballSpeed
+        state.ballSpeed = abs(ballSpeed) < minimumSpeed && floorDistance < dragDistance ? nil : ballSpeed
     }
 }
 
