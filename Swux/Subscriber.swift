@@ -7,11 +7,11 @@
 //
 
 public protocol SubscriberProtocol: AnyObject {
-    associatedtype State: StateProtocol
+    associatedtype State
     func stateChanged(to newState: State)
 }
 
-internal final class AnySubscriber<State: StateProtocol> {
+internal final class AnySubscriber<State> {
     let stateChanged: ((State) -> Void)
     let compare: ((AnyObject) -> Bool)
     let released: () -> Bool

@@ -6,7 +6,7 @@
 //  Copyright © 2018 Wircho. All rights reserved.
 //
 
-public final class Store<State: StateProtocol> {
+public final class Store<State> {
     fileprivate var subscribers: Atomic<[AnySubscriber<State>]> = Atomic([])
     private var _state: Atomic<State>
     

@@ -7,6 +7,6 @@
 //
 
 public protocol ActionProtocol {
-    associatedtype State: StateProtocol
+    associatedtype State
     func mutate(_ state: inout State) -> Void
 }
