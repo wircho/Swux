@@ -25,7 +25,7 @@ func abs(_ vector: CGVector) -> CGFloat {
 }
 
 private let bounceDecrease: CGFloat = 0.8
-private let dragDecrease: CGFloat = 0.95
+private let otherBounceDecrease: CGFloat = 0.9
 private let dragDistance: CGFloat = 1
 private let gravity: CGFloat = 0.2
 private let minimumSpeed: CGFloat = 0.1
@@ -74,26 +74,27 @@ internal struct NextFrame: WrappedStateActionProtocol {
         if targetCenter.x - state.ballRadius < 0 {
             targetCenter.x = 2 * state.ballRadius - targetCenter.x
             ballSpeed.dx = -ballSpeed.dx * bounceDecrease
+            ballSpeed.dy *= otherBounceDecrease
         }
         // Reflect top bounce
         if targetCenter.y - state.ballRadius < 0 {
             targetCenter.y = 2 * state.ballRadius - targetCenter.y
             ballSpeed.dy = -ballSpeed.dy * bounceDecrease
+            ballSpeed.dx *= otherBounceDecrease
         }
         // Reflect right bounce
         if targetCenter.x + state.ballRadius > state.canvasSize.width {
             targetCenter.x = 2 * (state.canvasSize.width - state.ballRadius) - targetCenter.x
             ballSpeed.dx = -ballSpeed.dx * bounceDecrease
+            ballSpeed.dy *= otherBounceDecrease
         }
         // Reflect bottom bounce
         if targetCenter.y + state.ballRadius > state.canvasSize.height {
             targetCenter.y = 2 * (state.canvasSize.height - state.ballRadius) - targetCenter.y
             ballSpeed.dy = -ballSpeed.dy * bounceDecrease
+            ballSpeed.dx *= otherBounceDecrease
         }
         let floorDistance = abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height)
-        if (floorDistance < dragDistance) {
-            ballSpeed.dx *= dragDecrease
-        }
         state.ballCenter = targetCenter
         state.ballSpeed = abs(ballSpeed) < minimumSpeed && floorDistance < dragDistance ? nil : ballSpeed
     }
