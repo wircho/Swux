@@ -24,11 +24,13 @@ func abs(_ vector: CGVector) -> CGFloat {
     return sqrt(vector.dx * vector.dx + vector.dy * vector.dy)
 }
 
-private let bounceDecrease: CGFloat = 0.8
-private let otherBounceDecrease: CGFloat = 0.95
+private let bounceDecreaseX: CGFloat = 0.8
+private let bounceDecreaseY: CGFloat = 0.7
+private let otherBounceDecreaseX: CGFloat = 0.98
+private let otherBounceDecreaseY: CGFloat = 0.95
 private let dragDistance: CGFloat = 1
-private let gravity: CGFloat = 0.2
-private let minimumSpeed: CGFloat = 0.1
+private let gravity: CGFloat = 0.3
+private let minimumSpeed: CGFloat = 0.2
 private let importantSizeChange: CGFloat = 0.5
 
 internal struct AppState {
@@ -36,6 +38,7 @@ internal struct AppState {
     var ballRadius: CGFloat
     var ballCenter: CGPoint
     var ballSpeed: CGVector?
+    var onFloor: Bool
 }
 
 internal struct Start: ActionProtocol {
@@ -48,7 +51,8 @@ internal struct Start: ActionProtocol {
             canvasSize: canvasSize,
             ballRadius: ballRadius,
             ballCenter: ballCenter,
-            ballSpeed: nil
+            ballSpeed: nil,
+            onFloor: true
         )
     }
 }
@@ -58,6 +62,7 @@ internal struct Jump: WrappedStateActionProtocol {
     func mutateWrapped(_ state: inout AppState) {
         guard state.ballSpeed == nil else { return }
         let r = 2 * drand48() - 1
+        state.onFloor = false
         state.ballSpeed = CGVector(dx: CGFloat(r > 0 ? 15 + r * 10 : -15 + r * 10), dy: -20)
     }
 }
@@ -73,30 +78,33 @@ internal struct NextFrame: WrappedStateActionProtocol {
         // Reflect left bounce
         if targetCenter.x - state.ballRadius < 0 {
             targetCenter.x = 2 * state.ballRadius - targetCenter.x
-            ballSpeed.dx = -ballSpeed.dx * bounceDecrease
-            ballSpeed.dy *= otherBounceDecrease
+            ballSpeed.dx = -ballSpeed.dx * bounceDecreaseX
+            ballSpeed.dy *= otherBounceDecreaseY
         }
         // Reflect top bounce
         if targetCenter.y - state.ballRadius < 0 {
             targetCenter.y = 2 * state.ballRadius - targetCenter.y
-            ballSpeed.dy = -ballSpeed.dy * bounceDecrease
-            ballSpeed.dx *= otherBounceDecrease
+            ballSpeed.dy = -ballSpeed.dy * bounceDecreaseY
+            ballSpeed.dx *= otherBounceDecreaseX
         }
         // Reflect right bounce
         if targetCenter.x + state.ballRadius > state.canvasSize.width {
             targetCenter.x = 2 * (state.canvasSize.width - state.ballRadius) - targetCenter.x
-            ballSpeed.dx = -ballSpeed.dx * bounceDecrease
-            ballSpeed.dy *= otherBounceDecrease
+            ballSpeed.dx = -ballSpeed.dx * bounceDecreaseX
+            ballSpeed.dy *= otherBounceDecreaseY
         }
         // Reflect bottom bounce
         if targetCenter.y + state.ballRadius > state.canvasSize.height {
             targetCenter.y = 2 * (state.canvasSize.height - state.ballRadius) - targetCenter.y
-            ballSpeed.dy = -ballSpeed.dy * bounceDecrease
-            ballSpeed.dx *= otherBounceDecrease
+            ballSpeed.dy = -ballSpeed.dy * bounceDecreaseY
+            ballSpeed.dx *= otherBounceDecreaseX
         }
         let floorDistance = abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height)
         state.ballCenter = targetCenter
         state.ballSpeed = abs(ballSpeed) < minimumSpeed && floorDistance < dragDistance ? nil : ballSpeed
+        if (!state.onFloor && abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height) < 0.5 && (state.ballSpeed?.dy ?? 0) < 0.2) {
+            state.onFloor = true
+        }
     }
 }
 

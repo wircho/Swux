@@ -54,6 +54,6 @@ class ViewController: UIViewController, SubscriberProtocol {
             return
         }
         jumpButton?.isEnabled = state.ballSpeed == nil
-        ballView.center = state.ballCenter
+        ballView.center = state.onFloor ? CGPoint(x: state.ballCenter.x, y: state.canvasSize.height - state.ballRadius) : state.ballCenter
     }
 }
