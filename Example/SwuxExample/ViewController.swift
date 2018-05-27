@@ -14,7 +14,7 @@ class ViewController: UIViewController, SubscriberProtocol {
     @IBOutlet weak var canvasView: UIView?
     @IBOutlet weak var jumpButton: UIButton?
     weak var _ballView: UIView? = nil
-    var timer: Timer?
+    var timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { _ in store.dispatch(NextFrame()) }
     var ballView: UIView {
         get {
             guard let _ballView = _ballView else {
@@ -29,13 +29,10 @@ class ViewController: UIViewController, SubscriberProtocol {
         }
     }
     
-    var subscribed = false
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard !subscribed , let canvasView = canvasView else { return }
-        subscribed = true
+        guard let canvasView = canvasView else { return }
         store.subscribe(self)
-        timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { _ in store.dispatch(NextFrame()) }
         store.dispatch(Start(canvasSize: canvasView.bounds.size, ballRadius: ballRadius))
     }
     
