@@ -18,7 +18,7 @@ class ViewController: UIViewController, SubscriberProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard let canvasView = canvasView, let ballView = ballView else { return }
-        disposable = store.subscribe(self)
+        disposable = disposable ?? store.subscribe(self)
         store.dispatch(Start(canvasSize: canvasView.bounds.size, ballRadius: ballView.frame.size.width / 2))
     }
     
@@ -33,13 +33,9 @@ class ViewController: UIViewController, SubscriberProtocol {
     }
     
     func stateChanged(to newState: AppState?) {
-        guard let state = newState else {
-            jumpButton?.isEnabled = false
-            ballView?.isHidden = true
-            return
-        }
-        jumpButton?.isEnabled = state.ballSpeed == nil
-        ballView?.isHidden = false
-        ballView?.center = state.onFloor ? CGPoint(x: state.ballCenter.x, y: state.canvasSize.height - state.ballRadius) : state.ballCenter
+        ballView?.isHidden = newState == nil
+        jumpButton?.isEnabled = newState != nil && newState?.ballSpeed == nil
+        guard let state = newState else { return }
+        ballView?.center = state.adjustedBallCenter
     }
 }

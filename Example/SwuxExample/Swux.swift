@@ -42,6 +42,15 @@ internal struct AppState {
     var onFloor: Bool
 }
 
+internal extension AppState {
+    var adjustedBallCenter: CGPoint {
+        var ballCenter = self.ballCenter
+        guard onFloor else { return ballCenter }
+        ballCenter.y = canvasSize.height - ballRadius
+        return ballCenter
+    }
+}
+
 internal struct Start: ActionProtocol {
     let canvasSize: CGSize
     let ballRadius: CGFloat
@@ -100,9 +109,11 @@ internal struct NextFrame: WrappedStateActionProtocol {
             ballSpeed.dy = -ballSpeed.dy * bounceDecreaseY
             ballSpeed.dx *= otherBounceDecreaseX
         }
+        // Stopping if needed
         let floorDistance = abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height)
         state.ballCenter = targetCenter
         state.ballSpeed = abs(ballSpeed) < minimumSpeed && floorDistance < dragDistance ? nil : ballSpeed
+        // Setting onFloor
         if (!state.onFloor && floorDistance < dragDistance && abs(state.ballSpeed?.dy ?? 0) < dragSpeed) {
             state.onFloor = true
         }
@@ -116,6 +127,7 @@ internal struct ChangeCanvasSize: WrappedStateActionProtocol {
         let oldSize = state.canvasSize
         state.canvasSize = size
         guard abs(size - oldSize) > importantSizeChange else { return }
+        // Keep relation between leading and trailing spacing
         let left = state.ballCenter.x - state.ballRadius
         let top = state.ballCenter.y - state.ballRadius
         let right = oldSize.width - state.ballCenter.x - state.ballRadius
