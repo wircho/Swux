@@ -102,7 +102,7 @@ internal struct NextFrame: WrappedStateActionProtocol {
         let floorDistance = abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height)
         state.ballCenter = targetCenter
         state.ballSpeed = abs(ballSpeed) < minimumSpeed && floorDistance < dragDistance ? nil : ballSpeed
-        if (!state.onFloor && abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height) < 0.5 && (state.ballSpeed?.dy ?? 0) < 0.2) {
+        if (!state.onFloor && abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height) < 0.5 && abs(state.ballSpeed?.dy ?? 0) < 0.1) {
             state.onFloor = true
         }
     }

@@ -11,14 +11,15 @@ public protocol SubscriberProtocol: AnyObject {
     func stateChanged(to newState: State)
 }
 
-internal final class AnySubscriber<State> {
-    let stateChanged: ((State) -> Void)
-    let compare: ((AnyObject) -> Bool)
-    let released: () -> Bool
+public protocol Disposable: AnyObject {}
+
+internal final class SubscriberDisposable<State>: Disposable {
+    weak var store: Store<State>?
     
-    init<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber) where Subscriber.State == State {
-        stateChanged = { [weak subscriber] in subscriber?.stateChanged(to: $0) }
-        compare = { [weak subscriber] in subscriber === $0 }
-        released = { [weak subscriber] in subscriber == nil }
+    init(store: Store<State>) { self.store = store }
+    
+    deinit {
+        guard let store = store else { return }
+        store.subscribers.access { $0[ObjectIdentifier(self)] = nil }
     }
 }

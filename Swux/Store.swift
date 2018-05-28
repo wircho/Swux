@@ -6,15 +6,17 @@
 //  Copyright © 2018 Wircho. All rights reserved.
 //
 
+import Foundation
+
 public final class Store<State> {
-    fileprivate var subscribers: Atomic<[AnySubscriber<State>]> = Atomic([])
+    internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = Atomic([:])
     private var _state: Atomic<State>
     
     fileprivate var state: State {
         get { return _state.access{ $0 } }
         set {
             _state.access{ $0 = newValue }
-            for subscriber in subscribers.value { subscriber.stateChanged(state) }
+            for (_, callback) in subscribers.value { callback(state) }
         }
     }
     
@@ -22,14 +24,10 @@ public final class Store<State> {
 }
 
 public extension Store {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber) where Subscriber.State == State {
-        let newSubscribers = subscribers.value.filter { !$0.released() } + [AnySubscriber(subscriber)]
-        subscribers.access{ $0 = newSubscribers }
-    }
-    
-    public func unsubscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber) where Subscriber.State == State {
-        let newSubscribers = subscribers.value.filter { !$0.released() && $0.compare(subscriber) }
-        subscribers.access{ $0 = newSubscribers }
+    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber) -> Disposable where Subscriber.State == State {
+        let disposable = SubscriberDisposable(store: self)
+        subscribers.access { [weak subscriber] in $0[ObjectIdentifier(disposable)] = { subscriber?.stateChanged(to: $0) } }
+        return disposable
     }
 }
 

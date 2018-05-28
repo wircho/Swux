@@ -15,6 +15,7 @@ class ViewController: UIViewController, SubscriberProtocol {
     @IBOutlet weak var jumpButton: UIButton?
     weak var _ballView: UIView? = nil
     var timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { _ in store.dispatch(NextFrame()) }
+    var disposable: Disposable?
     var ballView: UIView {
         get {
             guard let _ballView = _ballView else {
@@ -32,7 +33,7 @@ class ViewController: UIViewController, SubscriberProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard let canvasView = canvasView else { return }
-        store.subscribe(self)
+        disposable = store.subscribe(self)
         store.dispatch(Start(canvasSize: canvasView.bounds.size, ballRadius: ballRadius))
     }
     
