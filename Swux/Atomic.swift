@@ -1,6 +1,5 @@
 //
 //  Atomic.swift
-//  SwuxExample
 //
 //  Created by Tim Vermeulen.
 //

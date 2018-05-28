@@ -1,5 +1,5 @@
 //
-//  Swux.swift
+//  SwuxModel.swift
 //  SwuxExample
 //
 //  Created by Adolfo Rodriguez on 2018-05-26.
@@ -8,21 +8,15 @@
 
 import UIKit
 
-func +(lhs: CGPoint, rhs: CGVector) -> CGPoint {
-    return CGPoint(x: lhs.x + rhs.dx, y: lhs.y + rhs.dy)
-}
+// MARK: - Operators and Globals
 
-func -(lhs: CGPoint, rhs: CGPoint) -> CGVector {
-    return CGVector(dx: lhs.x - rhs.x, dy: lhs.y - rhs.y)
-}
+func +(lhs: CGPoint, rhs: CGVector) -> CGPoint { return CGPoint(x: lhs.x + rhs.dx, y: lhs.y + rhs.dy) }
 
-func -(lhs: CGSize, rhs: CGSize) -> CGVector {
-    return CGVector(dx: lhs.width - rhs.width, dy: lhs.height - rhs.height)
-}
+func -(lhs: CGPoint, rhs: CGPoint) -> CGVector { return CGVector(dx: lhs.x - rhs.x, dy: lhs.y - rhs.y) }
 
-func abs(_ vector: CGVector) -> CGFloat {
-    return sqrt(vector.dx * vector.dx + vector.dy * vector.dy)
-}
+func -(lhs: CGSize, rhs: CGSize) -> CGVector { return CGVector(dx: lhs.width - rhs.width, dy: lhs.height - rhs.height) }
+
+func abs(_ vector: CGVector) -> CGFloat { return sqrt(vector.dx * vector.dx + vector.dy * vector.dy) }
 
 private let bounceDecreaseX: CGFloat = 0.8
 private let bounceDecreaseY: CGFloat = 0.7
@@ -33,6 +27,8 @@ private let dragSpeed: CGFloat = 0.2
 private let gravity: CGFloat = 0.3
 private let minimumSpeed: CGFloat = 0.2
 private let importantSizeChange: CGFloat = 0.5
+
+// MARK: - App State
 
 internal struct AppState {
     var canvasSize: CGSize
@@ -50,6 +46,8 @@ internal extension AppState {
         return ballCenter
     }
 }
+
+// MARK: - Actions
 
 internal struct Start: ActionProtocol {
     let canvasSize: CGSize
@@ -137,5 +135,7 @@ internal struct ChangeCanvasSize: WrappedStateActionProtocol {
         state.ballCenter = CGPoint(x: newX, y: newY)
     }
 }
+
+// MARK: - Store
 
 internal let store = Store<AppState?>(nil)
