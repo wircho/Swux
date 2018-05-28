@@ -50,11 +50,11 @@
 		3E56578A20B9C99600E6D69C /* Swux */ = {
 			isa = PBXGroup;
 			children = (
-				3E56578F20B9C9DD00E6D69C /* Action.swift */,
-				3E56579920BB028000E6D69C /* WrappedStateAction.swift */,
 				3E56579120B9CA1C00E6D69C /* Atomic.swift */,
 				3E56579320B9CA4800E6D69C /* Store.swift */,
 				3E56579520B9CA9A00E6D69C /* Subscriber.swift */,
+				3E56578F20B9C9DD00E6D69C /* Action.swift */,
+				3E56579920BB028000E6D69C /* WrappedStateAction.swift */,
 			);
 			name = Swux;
 			path = ../../Swux;
