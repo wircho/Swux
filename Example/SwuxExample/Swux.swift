@@ -29,6 +29,7 @@ private let bounceDecreaseY: CGFloat = 0.7
 private let otherBounceDecreaseX: CGFloat = 0.98
 private let otherBounceDecreaseY: CGFloat = 0.95
 private let dragDistance: CGFloat = 1
+private let dragSpeed: CGFloat = 0.2
 private let gravity: CGFloat = 0.3
 private let minimumSpeed: CGFloat = 0.2
 private let importantSizeChange: CGFloat = 0.5
@@ -102,7 +103,7 @@ internal struct NextFrame: WrappedStateActionProtocol {
         let floorDistance = abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height)
         state.ballCenter = targetCenter
         state.ballSpeed = abs(ballSpeed) < minimumSpeed && floorDistance < dragDistance ? nil : ballSpeed
-        if (!state.onFloor && abs(state.ballCenter.y + state.ballRadius - state.canvasSize.height) < 0.5 && abs(state.ballSpeed?.dy ?? 0) < 0.1) {
+        if (!state.onFloor && floorDistance < dragDistance && abs(state.ballSpeed?.dy ?? 0) < dragSpeed) {
             state.onFloor = true
         }
     }
