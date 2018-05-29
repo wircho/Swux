@@ -71,7 +71,7 @@ internal struct Jump: WrappedStateActionProtocol {
         guard state.ballSpeed == nil else { return }
         let r = 2 * drand48() - 1
         state.onFloor = false
-        state.ballSpeed = CGVector(dx: CGFloat(r > 0 ? 8 + r * 5 : -8 + r * 5), dy: -10)
+        state.ballSpeed = CGVector(dx: CGFloat(r > 0 ? 8 + r * 5 : -8 + r * 5), dy: -20)
     }
 }
 
