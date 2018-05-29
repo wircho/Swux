@@ -14,10 +14,8 @@ public enum DispatchMode {
 public final class Store<State> {
     internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = Atomic([:])
     private let state: Atomic<State>
-    private let dispatchMode: DispatchMode
-    public init(_ state: State, dispatchMode: DispatchMode = .sync) {
+    public init(_ state: State) {
         self.state = Atomic(state)
-        self.dispatchMode = dispatchMode
     }
 }
 
@@ -36,7 +34,7 @@ public extension Store {
 }
 
 public extension Store {
-    public func dispatch<Action: ActionProtocol>(_ action: Action) where Action.State == State {
+    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State {
         let closure = { (state: inout State) in
             action.mutate(&state)
             for (_, callback) in self.subscribers.value { callback(state) }
