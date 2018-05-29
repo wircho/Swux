@@ -6,7 +6,7 @@ Swux is a simpler and Swiftier implementation of Redux inspired by [ReSwift](htt
 
 ## Step 1: Define your application state
 
-The *application state* is a structure that should uniquely define the state of your app's UI at any point in time. For example, an app that displays a single integer counter have the following state:
+The *application state* is a structure that should uniquely define the state of your app's UI at any point in time. For example, an app that displays a single integer counter could have the following state:
 
 ```swift
 struct AppState {
