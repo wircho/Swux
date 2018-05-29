@@ -2,6 +2,11 @@
 
 Swux is a simpler and Swiftier implementation of Redux inspired by [ReSwift](https://github.com/ReSwift/ReSwift).
 
+# Table of Contents
+
+- [Usage](#usage)
+- [Best Practices](#best-practices)
+
 # Usage
 
 ## Step 1: Define your application state
