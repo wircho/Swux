@@ -18,6 +18,10 @@ final internal class Atomic<Value> {
 }
 
 extension Atomic {
+    func accessAsync(_ block: @escaping (inout Value) -> Void) {
+        return queue.async { block(&self._value) }
+    }
+    
     func access<T>(_ block: (inout Value) -> T) -> T {
         return queue.sync { block(&_value) }
     }
