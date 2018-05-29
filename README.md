@@ -5,11 +5,17 @@ Swux is a simpler and Swiftier implementation of Redux inspired by [ReSwift](htt
 # Table of Contents
 
 - [Usage](#usage)
+  - [Step 1: Define your application state](#step_1)
+  - [Step 2: Define actions and implement their mutators](#step_2)
+  - [Step 3: Initialize your store](#step_3)
+  - [Step 4: Dispatch actions to the store and receive state updates](#step_4)
 - [Best Practices](#best-practices)
+  - [Optional States](#optional-states)
+  - [Enum States](#enum-states)
 
 # Usage
 
-## Step 1: Define your application state
+<h2 id="step_1">Step 1: Define your application state</h2>
 
 The *application state* is a structure that should uniquely define the state of your app's UI at any point in time. For example, an app that displays a single integer counter could have the following state:
 
@@ -19,7 +25,7 @@ struct AppState {
 }
 ```
 
-## Step 2: Define actions and implement their mutators
+<h2 id="step_2">Step 2: Define actions and implement their mutators</h2>
 
 The `AppState` above may be mutated by incrementing or decrementing the counter, for example, so we could define those actions as follows:
 
@@ -42,7 +48,7 @@ struct SetCounter: ActionProtocol {
 }
 ```
 
-## Step 3: Initialize your store
+<h2 id="step_3">Step 3: Initialize your store</h2>
 
 The *store* is responsible for storing the application state and queuing up actions. You must initialize it with an initial state:
 
@@ -50,7 +56,7 @@ The *store* is responsible for storing the application state and queuing up acti
 let store = Store(AppState(counter: 0))
 ```
 
-## Step 4: Dispatch actions to the store and receive state updates
+<h2 id="step_4">Step 4: Dispatch actions to the store and receive state updates</h2>
 
 You may submit actions to the store using the `dispatch` method as follows:
 
