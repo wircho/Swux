@@ -24,7 +24,7 @@ private let otherBounceDecreaseX: CGFloat = 0.98
 private let otherBounceDecreaseY: CGFloat = 0.95
 private let dragDistance: CGFloat = 1
 private let dragSpeed: CGFloat = 0.2
-private let gravity: CGFloat = 0.3
+private let gravity: CGFloat = 0.1
 private let minimumSpeed: CGFloat = 0.2
 private let importantSizeChange: CGFloat = 0.5
 
@@ -71,7 +71,7 @@ internal struct Jump: WrappedStateActionProtocol {
         guard state.ballSpeed == nil else { return }
         let r = 2 * drand48() - 1
         state.onFloor = false
-        state.ballSpeed = CGVector(dx: CGFloat(r > 0 ? 15 + r * 10 : -15 + r * 10), dy: -20)
+        state.ballSpeed = CGVector(dx: CGFloat(r > 0 ? 8 + r * 5 : -8 + r * 5), dy: -10)
     }
 }
 

@@ -12,7 +12,7 @@ class ViewController: UIViewController, SubscriberProtocol {
     @IBOutlet weak var canvasView: UIView?
     @IBOutlet weak var jumpButton: UIButton?
     @IBOutlet weak var ballView: UIView?
-    var timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { _ in store.dispatch(NextFrame()) }
+    var timer = Timer.scheduledTimer(withTimeInterval: 1/120, repeats: true) { _ in store.dispatch(NextFrame()) }
     var disposable: Disposable?
     
     override func viewDidAppear(_ animated: Bool) {
