@@ -7,25 +7,43 @@
 
 import Foundation
 
+public enum DispatchMode {
+    case sync, async
+}
+
 public final class Store<State> {
     internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = Atomic([:])
     private let state: Atomic<State>
-    public init(_ state: State) { self.state = Atomic(state) }
+    private let dispatchMode: DispatchMode
+    public init(_ state: State, dispatchMode: DispatchMode = .sync) {
+        self.state = Atomic(state)
+        self.dispatchMode = dispatchMode
+    }
 }
 
 public extension Store {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue = .main) -> Disposable where Subscriber.State == State {
+    private static func closure<Subscriber: SubscriberProtocol>(for subscriber: Subscriber, on queue: DispatchQueue?) -> (State) -> Void where Subscriber.State == State {
+        guard let queue = queue else { return { [weak subscriber] in subscriber?.stateChanged(to: $0) } }
+        return { [weak subscriber] (state: State) in queue.async { subscriber?.stateChanged(to: state) } }
+    }
+    
+    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil) -> Disposable where Subscriber.State == State {
         let disposable = SubscriberDisposable(store: self)
-        subscribers.access { [weak subscriber] in $0[ObjectIdentifier(disposable)] = { s in queue.async { subscriber?.stateChanged(to: s) } } }
+        let closure = Store.closure(for: subscriber, on: queue)
+        subscribers.access { $0[ObjectIdentifier(disposable)] = closure }
         return disposable
     }
 }
 
 public extension Store {
     public func dispatch<Action: ActionProtocol>(_ action: Action) where Action.State == State {
-        state.accessAsync {
-            action.mutate(&$0)
-            for (_, callback) in self.subscribers.value { callback($0) }
+        let closure = { (state: inout State) in
+            action.mutate(&state)
+            for (_, callback) in self.subscribers.value { callback(state) }
+        }
+        switch dispatchMode {
+        case .async: state.accessAsync(closure)
+        case .sync: state.access(closure)
         }
     }
 }
