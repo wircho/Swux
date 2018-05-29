@@ -207,7 +207,7 @@ When you subscribe to the store's state updates, you may specify an optional `Di
 store.subscribe(self, on: .main)
 ```
 
-This way, the `stateChanged` method is asynchronously dispatched to the specified queue (in the case above `.main`). If you do not speficy a queue, the method is called synchronously after every state change. In the latter scenario, the method could theoretically be called from any thread.
+This way, the `stateChanged` method is asynchronously dispatched to the specified queue (in the case above `.main`). If you do not speficy a queue, the method is called on the main thread.
 
 ### Async Dispatch
 
