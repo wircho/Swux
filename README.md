@@ -204,7 +204,7 @@ struct MovePoint: PointActionProtocol {
 When you subscribe to the store's state updates, you may specify an optional `DispatchQueue` as follows:
 
 ```swift
-store.subscribe(self, on: DispatchQueue.global(qos: .background))
+disposable = store.subscribe(self, on: DispatchQueue.global(qos: .background))
 ```
 
 This way, the `stateChanged` method is asynchronously dispatched to the specified queue. If you do not speficy a queue, the `stateChanged` method is called on the main thread.
