@@ -69,7 +69,118 @@ class ViewController: UIViewController, SubscriberProtocol {
     }
     
     func stateChanged(to newState: AppState) {
-        // Use newState to update the UI
+        /* Use newState to update the UI */
     }
+}
+```
+
+# Best Practices
+
+## Optional States
+
+If your application state is optional, for example,
+
+```swift
+struct AppState {
+  /* some properties */
+}
+
+let store = Store<AppState?>(nil)
+```
+
+then you may need to unwrap it before mutating it in an action mutator:
+
+```swift
+/* BAD WAY */
+struct SomeAction: ActionProtocol {
+  func mutate(_ state: inout AppState?) {
+    guard var unwrappedState = state else { return }
+    /* mutate unwrappedState */
+    state = unwrappedState
+  }
+}
+```
+
+Unfortunately this means that at some point in your code, there are two identical instances of `State` before only one of them gets mutated. This forces the Swift compiler to create a whole other copy of `state`, which could slow down your application. One way to prevent that is to temporarily "delete" one of the copies:
+
+```swift
+/* GOOD WAY (UNFORTUNATELY) */
+struct SomeAction: ActionProtocol {
+  func mutate(_ state: inout AppState?) {
+    guard var unwrappedState = state else { return }
+    state = nil
+    /* mutate unwrappedState */
+    state = unwrappedState
+  }
+}
+```
+
+To prevent you from having to do this every time, Swux provides another protocol that inherits from `ActionProtocol`:
+
+```swift
+/* BEST WAY */
+struct SomeAction: WrappedStateActionProtocol {
+  typealias State = AppState?
+  func mutateWrapped(_ state: inout AppState) {
+    /* mutate state */
+  }
+}
+```
+
+## Enum States
+
+You can implement a similar solution as the one above for `enum` states, since Swift does not currently provide [in-place mutation of `enum` types](https://forums.swift.org/t/in-place-mutation-of-an-enum-associated-value/11747). You may define and extend one helper protocol for each case that has associated values. For example:
+
+```swift
+/* STATE */
+
+enum AppState {
+  case uninitialized
+  case point(CGPoint)
+  case segment(CGPoint, CGPoint)
+}
+
+/* HELPER PROTOCOLS */
+
+protocol PointActionProtocol: ActionProtocol where State == AppState {
+  func mutatePoint(_ point: inout CGPoint)
+}
+
+extension PointActionProtocol {
+  func mutate(_ state: inout AppState) {
+    switch state {
+    case .point(var point):
+      state = .uninitialized
+      mutatePoint(point)
+      state = .point(point)
+    default: return
+    }
+  }
+}
+
+protocol SegmentActionProtocol: ActionProtocol where State == AppState {
+  func mutateSegment(_ first: inout CGPoint, _ second: inout CGPoint)
+}
+
+extension SegmentActionProtocol {
+  func mutate(_ state: inout AppState) {
+    switch state {
+    case var .segment(first, second):
+      state = .uninitialized
+      mutateSegment(first, second)
+      state = .segment(first, second)
+    default: return
+    }
+  }
+}
+
+/* USAGE */
+
+struct MovePoint: PointActionProtocol {
+  let by: CGVector
+  func mutatePoint(_ point: inout CGPoint) {
+    point.x += by.dx
+    point.y += by.dy
+  }
 }
 ```
