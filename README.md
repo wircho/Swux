@@ -12,6 +12,7 @@ Swux is a simpler and Swiftier implementation of Redux inspired by [ReSwift](htt
 - [Best Practices](#best-practices)
   - [Optional States](#optional-states)
   - [Enum States](#enum-states)
+  - [Sync/Async Subscribers And Dispatch](#syncasync-subscribers-and-dispatch)
 
 # Usage
 
@@ -195,3 +196,25 @@ struct MovePoint: PointActionProtocol {
   }
 }
 ```
+
+## Sync/Async Subscribers And Dispatch
+
+### Async Subscribers
+
+When you subscribe to the store's state updates, you may specify an optional `DispatchQueue` as follows:
+
+```swift
+store.subscribe(self, on: .main)
+```
+
+This way, the `stateChanged` method is asynchronously dispatched to the specified queue (in the case above `.main`). If you do not speficy a queue, the method is called synchronously after every state change. In the latter scenario, the method could theoretically be called from any thread.
+
+### Async Dispatch
+
+You may dispatch actions asynchronously (to the store's action queue) by specifying a `DispatchMode` as follows:
+
+```swift
+store.dispatch(SomeAction(), dispatchMode: .async)
+```
+
+By default all actions are dispatched synchronously.
