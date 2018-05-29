@@ -20,9 +20,19 @@ public final class Store<State> {
 }
 
 public extension Store {
+    private static func onQueue<T>(_ queue: DispatchQueue, _ closure: @escaping (T) -> Void) -> (T) -> Void  {
+        return { t in queue.async { closure(t) } }
+    }
+    
+    private static func onMain<T>(_ closure: @escaping (T) -> Void) -> (T) -> Void {
+        guard Thread.current.isMainThread else { return onQueue(.main, closure) }
+        return closure
+    }
+    
     private static func closure<Subscriber: SubscriberProtocol>(for subscriber: Subscriber, on queue: DispatchQueue?) -> (State) -> Void where Subscriber.State == State {
-        guard let queue = queue else { return { [weak subscriber] in subscriber?.stateChanged(to: $0) } }
-        return { [weak subscriber] (state: State) in queue.async { subscriber?.stateChanged(to: state) } }
+        let closure: (State) -> Void = { [weak subscriber] in subscriber?.stateChanged(to: $0) }
+        guard let queue = queue else { return onMain(closure)  }
+        return onQueue(queue, closure)
     }
     
     public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil) -> Disposable where Subscriber.State == State {
