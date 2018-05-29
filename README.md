@@ -113,7 +113,7 @@ struct SomeAction: ActionProtocol {
 }
 ```
 
-Unfortunately this means that at some point in your code, there are two identical instances of `State` before only one of them gets mutated. This forces the Swift compiler to create a whole other copy of `state`, which could slow down your application. One way to prevent that is to temporarily "delete" one of the copies:
+Unfortunately this means that at some point at runtime, there are two identical instances of `State` before only one of them gets mutated. This forces the Swift compiler to create a whole other copy of `state`, which could slow down your application. One way to prevent that is to temporarily "delete" one of the copies:
 
 ```swift
 /* GOOD WAY (UNFORTUNATELY) */
