@@ -6,6 +6,7 @@ Swux is a Swiftier implementation of Redux inspired by [ReSwift](https://github.
 
 # Table of Contents
 
+- [Installation](#installation)
 - [Usage](#usage)
   - [Step 1: Define your application state](#step_1)
   - [Step 2: Define actions and implement their mutators](#step_2)
@@ -15,6 +16,16 @@ Swux is a Swiftier implementation of Redux inspired by [ReSwift](https://github.
   - [Optional States](#optional-states)
   - [Enum States](#enum-states)
   - [Sync/Async Subscribers And Dispatch](#syncasync-subscribers-and-dispatch)
+
+# Installation
+
+## Cocoapods
+
+Add this to your Podfile:
+
+```
+pod 'Swux', :git => 'https://github.com/wircho/Swux.git'
+```
 
 # Usage
 
