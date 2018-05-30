@@ -195,6 +195,16 @@ struct MovePoint: PointActionProtocol {
     point.y += by.dy
   }
 }
+
+struct MoveSegment: SegmentActionProtocol {
+  let by: CGVector
+  func mutateSegment(_ first: inout CGPoint, _ second: inout CGPoint) {
+    first.x += by.dx
+    first.y += by.dy
+    second.x += by.dx
+    second.y += by.dy
+  }
+}
 ```
 
 ## Sync/Async Subscribers And Dispatch
@@ -217,4 +227,4 @@ You may dispatch actions asynchronously (to the store's action queue) by specify
 store.dispatch(SomeAction(), dispatchMode: .async)
 ```
 
-By default all actions are dispatched synchronously.
+By default all actions are performed synchronously.
