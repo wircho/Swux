@@ -13,7 +13,7 @@ public enum DispatchMode {
 
 public final class Store<State> {
     internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = Atomic([:])
-    private let state: Atomic<State>
+    fileprivate let state: Atomic<State>
     public init(_ state: State) {
         self.state = Atomic(state)
     }

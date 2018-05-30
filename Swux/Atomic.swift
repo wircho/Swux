@@ -8,8 +8,8 @@
 import Foundation
 
 final internal class Atomic<Value> {
-    private var _value: Value
-    private let queue: DispatchQueue
+    fileprivate var _value: Value
+    fileprivate let queue: DispatchQueue
     
     init(_ value: Value, queue: DispatchQueue = DispatchQueue(label: "\(Value.self)", qos: DispatchQoS.userInteractive)) {
         self._value = value
