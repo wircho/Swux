@@ -13,7 +13,7 @@
         <!--View Controller-->
         <scene sceneID="q64-V2-qXQ">
             <objects>
-                <viewController id="Rmm-gI-Tqy" customClass="ViewController" customModule="SwuxExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Rmm-gI-Tqy" customClass="ViewController" customModule="Swux_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0FC-EF-ED1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -31,7 +31,7 @@
                                     <color key="titleColor" white="1" alpha="0.38069432219999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="tapJump:" destination="Rmm-gI-Tqy" eventType="touchUpInside" id="nZx-5J-grB"/>
+                                    <action selector="tapJump:" destination="Rmm-gI-Tqy" eventType="touchUpInside" id="OxU-Io-xBJ"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KkL-9q-1Mu">
@@ -64,9 +64,9 @@
                         <viewLayoutGuide key="safeArea" id="KwI-jW-J3z"/>
                     </view>
                     <connections>
-                        <outlet property="ballView" destination="yry-mD-sDq" id="lpA-n7-krT"/>
-                        <outlet property="canvasView" destination="KkL-9q-1Mu" id="nSR-VQ-GXb"/>
-                        <outlet property="jumpButton" destination="rSv-i6-57S" id="DOb-Es-Ye5"/>
+                        <outlet property="ballView" destination="yry-mD-sDq" id="zsS-ZJ-fPb"/>
+                        <outlet property="canvasView" destination="KkL-9q-1Mu" id="DAc-SA-IYl"/>
+                        <outlet property="jumpButton" destination="rSv-i6-57S" id="Dxm-0p-JAS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uLH-IH-LN7" sceneMemberID="firstResponder"/>
