@@ -1,6 +1,0 @@
-framework module Swux {
-  umbrella header "Swux-umbrella.h"
-
-  export *
-  module * { export * }
-}
