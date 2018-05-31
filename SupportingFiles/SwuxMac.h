@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Swux-Swift.h"
 
 //! Project version number for SwuxMac.
 FOUNDATION_EXPORT double SwuxMacVersionNumber;

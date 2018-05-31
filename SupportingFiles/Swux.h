@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Swux-Swift.h"
 
 //! Project version number for Swux.
 FOUNDATION_EXPORT double SwuxVersionNumber;
