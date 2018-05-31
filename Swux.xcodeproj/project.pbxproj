@@ -83,7 +83,8 @@
 				3E9C292C20BF731500FED88A /* Store.swift */,
 				3E9C292D20BF731500FED88A /* Action.swift */,
 			);
-			path = Swux;
+			name = Swux;
+			path = Sources/Swux;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
