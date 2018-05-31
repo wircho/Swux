@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3E9C292520BF72B400FED88A /* Swux.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9C292320BF72B400FED88A /* Swux.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3E9C292720BF72BD00FED88A /* SwuxMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9C292420BF72B400FED88A /* SwuxMac.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3E9C292E20BF731500FED88A /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292920BF731500FED88A /* Subscriber.swift */; };
 		3E9C292F20BF731500FED88A /* WrappedStateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292A20BF731500FED88A /* WrappedStateAction.swift */; };
 		3E9C293020BF731500FED88A /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292B20BF731500FED88A /* Atomic.swift */; };
@@ -25,8 +23,6 @@
 		3E9C290820BF716800FED88A /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9C290C20BF716800FED88A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E9C291820BF71D900FED88A /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E9C292320BF72B400FED88A /* Swux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swux.h; sourceTree = "<group>"; };
-		3E9C292420BF72B400FED88A /* SwuxMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwuxMac.h; sourceTree = "<group>"; };
 		3E9C292920BF731500FED88A /* Subscriber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
 		3E9C292A20BF731500FED88A /* WrappedStateAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WrappedStateAction.swift; sourceTree = "<group>"; };
 		3E9C292B20BF731500FED88A /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
@@ -73,8 +69,6 @@
 		3E9C290A20BF716800FED88A /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				3E9C292320BF72B400FED88A /* Swux.h */,
-				3E9C292420BF72B400FED88A /* SwuxMac.h */,
 				3E9C290C20BF716800FED88A /* Info.plist */,
 			);
 			path = SupportingFiles;
@@ -99,7 +93,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E9C292520BF72B400FED88A /* Swux.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +100,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E9C292720BF72BD00FED88A /* SwuxMac.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
