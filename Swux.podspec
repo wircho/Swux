@@ -8,11 +8,11 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Swux'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of Swux.'
+  s.version          = '0.1.7'
+  s.summary          = 'A Swiftier Redux'
 
   s.description      = <<-DESC
-A Swift-ier implementation of Redux.
+A Swifty implementation of the Redux JavaScript library's unidirectional data flow paradigm. Inspired by ReSwift, but with a Swiftier API involving action mutators, allowing for faster apps that take full advantage of Swift's copy-on-write and exclusive ownership features.
                        DESC
 
   s.homepage         = 'https://github.com/wircho/Swux'
@@ -20,7 +20,10 @@ A Swift-ier implementation of Redux.
   s.author           = { 'wircho' => 'correo.de.adolfo@gmail.com' }
   s.source           = { :git => 'https://github.com/wircho/Swux.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '8.0'
+  s.swift_version = '4.1'
+
+  s.ios.deployment_target = '10.0'
+  s.osx.deployment_target = '10.13'
 
   s.source_files = 'Swux/*'
   

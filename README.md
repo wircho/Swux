@@ -27,6 +27,16 @@ Add this to your Podfile:
 pod 'Swux', :git => 'https://github.com/wircho/Swux.git'
 ```
 
+## Carthage
+
+Add this to your Cartfile:
+
+```
+github "wircho/Swux"
+```
+
+Make sure to specify the platform (iOS or MacOS) when updating the Carthage builds. Use either `carthage update --platform ios` or  `carthage update --platform macos` accordingly.
+
 # Usage
 
 <h2 id="step_1">Step 1: Define your application state</h2>
@@ -34,6 +44,8 @@ pod 'Swux', :git => 'https://github.com/wircho/Swux.git'
 The *application state* is a structure that should uniquely define the state of your app's UI at any point in time. For example, an app that displays a single integer counter could have the following state:
 
 ```swift
+import Swux
+
 struct AppState {
   var counter: Int
 }
