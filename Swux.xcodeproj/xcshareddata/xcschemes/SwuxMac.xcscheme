@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3E9C290720BF716800FED88A"
-               BuildableName = "Swux.framework"
-               BlueprintName = "Swux"
+               BlueprintIdentifier = "3E9C291720BF71D900FED88A"
+               BuildableName = "SwuxMac.framework"
+               BlueprintName = "SwuxMac"
                ReferencedContainer = "container:Swux.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3E9C290720BF716800FED88A"
-            BuildableName = "Swux.framework"
-            BlueprintName = "Swux"
+            BlueprintIdentifier = "3E9C291720BF71D900FED88A"
+            BuildableName = "SwuxMac.framework"
+            BlueprintName = "SwuxMac"
             ReferencedContainer = "container:Swux.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3E9C290720BF716800FED88A"
-            BuildableName = "Swux.framework"
-            BlueprintName = "Swux"
+            BlueprintIdentifier = "3E9C291720BF71D900FED88A"
+            BuildableName = "SwuxMac.framework"
+            BlueprintName = "SwuxMac"
             ReferencedContainer = "container:Swux.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

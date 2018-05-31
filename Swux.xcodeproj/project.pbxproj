@@ -7,27 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3E2EDBFF20BF3C0F001C4276 /* Swux.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E2EDBFD20BF3C0F001C4276 /* Swux.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3E2EDC0B20BF3E7F001C4276 /* WrappedStateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2EDC0620BF3E7E001C4276 /* WrappedStateAction.swift */; };
-		3E2EDC0C20BF3E7F001C4276 /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2EDC0720BF3E7E001C4276 /* Subscriber.swift */; };
-		3E2EDC0D20BF3E7F001C4276 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2EDC0820BF3E7E001C4276 /* Atomic.swift */; };
-		3E2EDC0E20BF3E7F001C4276 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2EDC0920BF3E7F001C4276 /* Action.swift */; };
-		3E2EDC0F20BF3E7F001C4276 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2EDC0A20BF3E7F001C4276 /* Store.swift */; };
+		3E9C292520BF72B400FED88A /* Swux.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9C292320BF72B400FED88A /* Swux.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3E9C292720BF72BD00FED88A /* SwuxMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9C292420BF72B400FED88A /* SwuxMac.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3E9C292E20BF731500FED88A /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292920BF731500FED88A /* Subscriber.swift */; };
+		3E9C292F20BF731500FED88A /* WrappedStateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292A20BF731500FED88A /* WrappedStateAction.swift */; };
+		3E9C293020BF731500FED88A /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292B20BF731500FED88A /* Atomic.swift */; };
+		3E9C293120BF731500FED88A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292C20BF731500FED88A /* Store.swift */; };
+		3E9C293220BF731500FED88A /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292D20BF731500FED88A /* Action.swift */; };
+		3E9C293320BF731A00FED88A /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292920BF731500FED88A /* Subscriber.swift */; };
+		3E9C293420BF731A00FED88A /* WrappedStateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292A20BF731500FED88A /* WrappedStateAction.swift */; };
+		3E9C293520BF731A00FED88A /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292B20BF731500FED88A /* Atomic.swift */; };
+		3E9C293620BF731A00FED88A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292C20BF731500FED88A /* Store.swift */; };
+		3E9C293720BF731A00FED88A /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292D20BF731500FED88A /* Action.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3E2EDBFA20BF3C0F001C4276 /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E2EDBFD20BF3C0F001C4276 /* Swux.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Swux.h; sourceTree = "<group>"; };
-		3E2EDBFE20BF3C0F001C4276 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3E2EDC0620BF3E7E001C4276 /* WrappedStateAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WrappedStateAction.swift; path = Swux/WrappedStateAction.swift; sourceTree = SOURCE_ROOT; };
-		3E2EDC0720BF3E7E001C4276 /* Subscriber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Subscriber.swift; path = Swux/Subscriber.swift; sourceTree = SOURCE_ROOT; };
-		3E2EDC0820BF3E7E001C4276 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Atomic.swift; path = Swux/Atomic.swift; sourceTree = SOURCE_ROOT; };
-		3E2EDC0920BF3E7F001C4276 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Action.swift; path = Swux/Action.swift; sourceTree = SOURCE_ROOT; };
-		3E2EDC0A20BF3E7F001C4276 /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Store.swift; path = Swux/Store.swift; sourceTree = SOURCE_ROOT; };
+		3E9C290820BF716800FED88A /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E9C290C20BF716800FED88A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3E9C291820BF71D900FED88A /* SwuxMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwuxMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E9C292320BF72B400FED88A /* Swux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swux.h; sourceTree = "<group>"; };
+		3E9C292420BF72B400FED88A /* SwuxMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwuxMac.h; sourceTree = "<group>"; };
+		3E9C292920BF731500FED88A /* Subscriber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
+		3E9C292A20BF731500FED88A /* WrappedStateAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WrappedStateAction.swift; sourceTree = "<group>"; };
+		3E9C292B20BF731500FED88A /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
+		3E9C292C20BF731500FED88A /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		3E9C292D20BF731500FED88A /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3E2EDBF620BF3C0F001C4276 /* Frameworks */ = {
+		3E9C290420BF716800FED88A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E9C291420BF71D900FED88A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -37,40 +52,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3E2EDBF020BF3C0F001C4276 = {
+		3E9C28FE20BF716800FED88A = {
 			isa = PBXGroup;
 			children = (
-				3E2EDC0520BF3E64001C4276 /* Swux */,
-				3E2EDBFC20BF3C0F001C4276 /* SupportingFiles */,
-				3E2EDBFB20BF3C0F001C4276 /* Products */,
+				3E9C292820BF731500FED88A /* Swux */,
+				3E9C290A20BF716800FED88A /* SupportingFiles */,
+				3E9C290920BF716800FED88A /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		3E2EDBFB20BF3C0F001C4276 /* Products */ = {
+		3E9C290920BF716800FED88A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3E2EDBFA20BF3C0F001C4276 /* Swux.framework */,
+				3E9C290820BF716800FED88A /* Swux.framework */,
+				3E9C291820BF71D900FED88A /* SwuxMac.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3E2EDBFC20BF3C0F001C4276 /* SupportingFiles */ = {
+		3E9C290A20BF716800FED88A /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				3E2EDBFD20BF3C0F001C4276 /* Swux.h */,
-				3E2EDBFE20BF3C0F001C4276 /* Info.plist */,
+				3E9C292320BF72B400FED88A /* Swux.h */,
+				3E9C292420BF72B400FED88A /* SwuxMac.h */,
+				3E9C290C20BF716800FED88A /* Info.plist */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
 		};
-		3E2EDC0520BF3E64001C4276 /* Swux */ = {
+		3E9C292820BF731500FED88A /* Swux */ = {
 			isa = PBXGroup;
 			children = (
-				3E2EDC0920BF3E7F001C4276 /* Action.swift */,
-				3E2EDC0820BF3E7E001C4276 /* Atomic.swift */,
-				3E2EDC0A20BF3E7F001C4276 /* Store.swift */,
-				3E2EDC0720BF3E7E001C4276 /* Subscriber.swift */,
-				3E2EDC0620BF3E7E001C4276 /* WrappedStateAction.swift */,
+				3E9C292920BF731500FED88A /* Subscriber.swift */,
+				3E9C292A20BF731500FED88A /* WrappedStateAction.swift */,
+				3E9C292B20BF731500FED88A /* Atomic.swift */,
+				3E9C292C20BF731500FED88A /* Store.swift */,
+				3E9C292D20BF731500FED88A /* Action.swift */,
 			);
 			path = Swux;
 			sourceTree = "<group>";
@@ -78,25 +95,33 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		3E2EDBF720BF3C0F001C4276 /* Headers */ = {
+		3E9C290520BF716800FED88A /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E2EDBFF20BF3C0F001C4276 /* Swux.h in Headers */,
+				3E9C292520BF72B400FED88A /* Swux.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E9C291520BF71D900FED88A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E9C292720BF72BD00FED88A /* SwuxMac.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		3E2EDBF920BF3C0F001C4276 /* Swux */ = {
+		3E9C290720BF716800FED88A /* Swux */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3E2EDC0220BF3C0F001C4276 /* Build configuration list for PBXNativeTarget "Swux" */;
+			buildConfigurationList = 3E9C291020BF716800FED88A /* Build configuration list for PBXNativeTarget "Swux" */;
 			buildPhases = (
-				3E2EDBF520BF3C0F001C4276 /* Sources */,
-				3E2EDBF620BF3C0F001C4276 /* Frameworks */,
-				3E2EDBF720BF3C0F001C4276 /* Headers */,
-				3E2EDBF820BF3C0F001C4276 /* Resources */,
+				3E9C290320BF716800FED88A /* Sources */,
+				3E9C290420BF716800FED88A /* Frameworks */,
+				3E9C290520BF716800FED88A /* Headers */,
+				3E9C290620BF716800FED88A /* Resources */,
 			);
 			buildRules = (
 			);
@@ -104,43 +129,71 @@
 			);
 			name = Swux;
 			productName = Swux;
-			productReference = 3E2EDBFA20BF3C0F001C4276 /* Swux.framework */;
+			productReference = 3E9C290820BF716800FED88A /* Swux.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		3E9C291720BF71D900FED88A /* SwuxMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E9C291F20BF71D900FED88A /* Build configuration list for PBXNativeTarget "SwuxMac" */;
+			buildPhases = (
+				3E9C291320BF71D900FED88A /* Sources */,
+				3E9C291420BF71D900FED88A /* Frameworks */,
+				3E9C291520BF71D900FED88A /* Headers */,
+				3E9C291620BF71D900FED88A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwuxMac;
+			productName = SwuxMac;
+			productReference = 3E9C291820BF71D900FED88A /* SwuxMac.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		3E2EDBF120BF3C0F001C4276 /* Project object */ = {
+		3E9C28FF20BF716800FED88A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Wircho;
 				TargetAttributes = {
-					3E2EDBF920BF3C0F001C4276 = {
+					3E9C290720BF716800FED88A = {
 						CreatedOnToolsVersion = 9.3.1;
-						LastSwiftMigration = 0930;
+					};
+					3E9C291720BF71D900FED88A = {
+						CreatedOnToolsVersion = 9.3.1;
 					};
 				};
 			};
-			buildConfigurationList = 3E2EDBF420BF3C0F001C4276 /* Build configuration list for PBXProject "Swux" */;
+			buildConfigurationList = 3E9C290220BF716800FED88A /* Build configuration list for PBXProject "Swux" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 3E2EDBF020BF3C0F001C4276;
-			productRefGroup = 3E2EDBFB20BF3C0F001C4276 /* Products */;
+			mainGroup = 3E9C28FE20BF716800FED88A;
+			productRefGroup = 3E9C290920BF716800FED88A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3E2EDBF920BF3C0F001C4276 /* Swux */,
+				3E9C290720BF716800FED88A /* Swux */,
+				3E9C291720BF71D900FED88A /* SwuxMac */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3E2EDBF820BF3C0F001C4276 /* Resources */ = {
+		3E9C290620BF716800FED88A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E9C291620BF71D900FED88A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -150,22 +203,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		3E2EDBF520BF3C0F001C4276 /* Sources */ = {
+		3E9C290320BF716800FED88A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E2EDC0F20BF3E7F001C4276 /* Store.swift in Sources */,
-				3E2EDC0B20BF3E7F001C4276 /* WrappedStateAction.swift in Sources */,
-				3E2EDC0E20BF3E7F001C4276 /* Action.swift in Sources */,
-				3E2EDC0D20BF3E7F001C4276 /* Atomic.swift in Sources */,
-				3E2EDC0C20BF3E7F001C4276 /* Subscriber.swift in Sources */,
+				3E9C292E20BF731500FED88A /* Subscriber.swift in Sources */,
+				3E9C293020BF731500FED88A /* Atomic.swift in Sources */,
+				3E9C292F20BF731500FED88A /* WrappedStateAction.swift in Sources */,
+				3E9C293220BF731500FED88A /* Action.swift in Sources */,
+				3E9C293120BF731500FED88A /* Store.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E9C291320BF71D900FED88A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E9C293320BF731A00FED88A /* Subscriber.swift in Sources */,
+				3E9C293520BF731A00FED88A /* Atomic.swift in Sources */,
+				3E9C293420BF731A00FED88A /* WrappedStateAction.swift in Sources */,
+				3E9C293720BF731A00FED88A /* Action.swift in Sources */,
+				3E9C293620BF731A00FED88A /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		3E2EDC0020BF3C0F001C4276 /* Debug */ = {
+		3E9C290E20BF716800FED88A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -197,7 +262,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -217,10 +282,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -228,7 +293,7 @@
 			};
 			name = Debug;
 		};
-		3E2EDC0120BF3C0F001C4276 /* Release */ = {
+		3E9C290F20BF716800FED88A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -260,7 +325,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -274,49 +339,71 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
-		3E2EDC0320BF3C0F001C4276 /* Debug */ = {
+		3E9C291120BF716800FED88A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = PQD87S5J6V;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = SupportingFiles/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/../Frameworks",
+					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wircho.Swux;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		3E2EDC0420BF3C0F001C4276 /* Release */ = {
+		3E9C291220BF716800FED88A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PQD87S5J6V;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SupportingFiles/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wircho.Swux;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3E9C291D20BF71D900FED88A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -332,8 +419,38 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wircho.Swux;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wircho.SwuxMac;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		3E9C291E20BF71D900FED88A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PQD87S5J6V;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = SupportingFiles/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wircho.SwuxMac;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
 			};
@@ -342,25 +459,34 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3E2EDBF420BF3C0F001C4276 /* Build configuration list for PBXProject "Swux" */ = {
+		3E9C290220BF716800FED88A /* Build configuration list for PBXProject "Swux" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3E2EDC0020BF3C0F001C4276 /* Debug */,
-				3E2EDC0120BF3C0F001C4276 /* Release */,
+				3E9C290E20BF716800FED88A /* Debug */,
+				3E9C290F20BF716800FED88A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3E2EDC0220BF3C0F001C4276 /* Build configuration list for PBXNativeTarget "Swux" */ = {
+		3E9C291020BF716800FED88A /* Build configuration list for PBXNativeTarget "Swux" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3E2EDC0320BF3C0F001C4276 /* Debug */,
-				3E2EDC0420BF3C0F001C4276 /* Release */,
+				3E9C291120BF716800FED88A /* Debug */,
+				3E9C291220BF716800FED88A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3E9C291F20BF71D900FED88A /* Build configuration list for PBXNativeTarget "SwuxMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E9C291D20BF71D900FED88A /* Debug */,
+				3E9C291E20BF71D900FED88A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 3E2EDBF120BF3C0F001C4276 /* Project object */;
+	rootObject = 3E9C28FF20BF716800FED88A /* Project object */;
 }

@@ -6,7 +6,7 @@
 //  Copyright © 2018 Wircho. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for Swux.
 FOUNDATION_EXPORT double SwuxVersionNumber;
