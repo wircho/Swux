@@ -5,6 +5,10 @@
 //  Copyright © 2018 Wircho. All rights reserved.
 //
 
+/*
+ Types Item, Box, Shelf are experimental
+ */
+
 import Foundation
 
 public final class Box<Value>: SubscribableProtocolBase {
@@ -74,12 +78,18 @@ public extension Item {
     public var value: Value { return _value.value }
 }
 
-public final class Shelf<Key: Hashable, Value> {
+public protocol Shelved {
+    associatedtype Key: Hashable
+    var key: Key { get }
+}
+
+public final class Shelf<Value: Shelved> {
     fileprivate var dictionary: [Key: Box<Value>] = [:]
     public init() { }
 }
 
 public extension Shelf {
+    typealias Key = Value.Key
     subscript(_ key: Key) -> Box<Value> {
         get {
             guard let box = dictionary[key] else {
@@ -89,6 +99,10 @@ public extension Shelf {
             }
             return box
         }
+    }
+    
+    public func item(_ value: Value) -> Item<Value> {
+        return self[value.key].item(value: value)
     }
 }
 
