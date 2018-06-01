@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E1B9D2820C0B48C0089B327 /* Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1B9D2720C0B48C0089B327 /* Shelf.swift */; };
+		3E1B9D2920C0B48F0089B327 /* Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1B9D2720C0B48C0089B327 /* Shelf.swift */; };
+		3E1B9D2B20C0F3EB0089B327 /* Queuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1B9D2A20C0F3EB0089B327 /* Queuing.swift */; };
+		3E1B9D2C20C0F7680089B327 /* Queuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1B9D2A20C0F3EB0089B327 /* Queuing.swift */; };
 		3E9C292E20BF731500FED88A /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292920BF731500FED88A /* Subscriber.swift */; };
 		3E9C292F20BF731500FED88A /* WrappedStateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292A20BF731500FED88A /* WrappedStateAction.swift */; };
 		3E9C293020BF731500FED88A /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292B20BF731500FED88A /* Atomic.swift */; };
@@ -20,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3E1B9D2720C0B48C0089B327 /* Shelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shelf.swift; sourceTree = "<group>"; };
+		3E1B9D2A20C0F3EB0089B327 /* Queuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queuing.swift; sourceTree = "<group>"; };
 		3E9C290820BF716800FED88A /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9C290C20BF716800FED88A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E9C291820BF71D900FED88A /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,10 +84,12 @@
 			isa = PBXGroup;
 			children = (
 				3E9C292920BF731500FED88A /* Subscriber.swift */,
+				3E1B9D2A20C0F3EB0089B327 /* Queuing.swift */,
 				3E9C292A20BF731500FED88A /* WrappedStateAction.swift */,
 				3E9C292B20BF731500FED88A /* Atomic.swift */,
 				3E9C292C20BF731500FED88A /* Store.swift */,
 				3E9C292D20BF731500FED88A /* Action.swift */,
+				3E1B9D2720C0B48C0089B327 /* Shelf.swift */,
 			);
 			name = Swux;
 			path = Sources/Swux;
@@ -200,10 +208,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E1B9D2820C0B48C0089B327 /* Shelf.swift in Sources */,
 				3E9C292E20BF731500FED88A /* Subscriber.swift in Sources */,
 				3E9C293020BF731500FED88A /* Atomic.swift in Sources */,
 				3E9C292F20BF731500FED88A /* WrappedStateAction.swift in Sources */,
 				3E9C293220BF731500FED88A /* Action.swift in Sources */,
+				3E1B9D2B20C0F3EB0089B327 /* Queuing.swift in Sources */,
 				3E9C293120BF731500FED88A /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -212,10 +222,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E1B9D2920C0B48F0089B327 /* Shelf.swift in Sources */,
 				3E9C293320BF731A00FED88A /* Subscriber.swift in Sources */,
 				3E9C293520BF731A00FED88A /* Atomic.swift in Sources */,
 				3E9C293420BF731A00FED88A /* WrappedStateAction.swift in Sources */,
 				3E9C293720BF731A00FED88A /* Action.swift in Sources */,
+				3E1B9D2C20C0F7680089B327 /* Queuing.swift in Sources */,
 				3E9C293620BF731A00FED88A /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
