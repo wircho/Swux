@@ -7,11 +7,11 @@
 
 import Foundation
 
-public final class Shelver<Value>: SubscribableProtocolBase {
-    internal weak var shelf: Shelf<Value>? = nil {
+public final class Box<Value>: SubscribableProtocolBase {
+    internal weak var item: Item<Value>? = nil {
         didSet {
-            oldValue?.shelver = nil
-            changed(shelf?._value.value)
+            oldValue?.box = nil
+            changed(item?._value.value)
         }
     }
     internal var subscribers: Atomic<[ObjectIdentifier: (Value?) -> Void]> = Atomic([:])
@@ -19,58 +19,78 @@ public final class Shelver<Value>: SubscribableProtocolBase {
     public init() { }
 }
 
-public extension Shelver {
-    public var value: Value? { return shelf?._value.value }
+public extension Box {
+    public var value: Value? { return item?._value.value }
 }
 
-public extension Shelver {
-    public func shelf(_ value: Value) -> Shelf<Value> {
-        let shelf = Shelf(value, shelver: self)
-        self.shelf = shelf
-        return shelf
+public extension Box {
+    public func item(_ value: Value) -> Item<Value> {
+        let item = Item(value, box: self)
+        self.item = item
+        return item
     }
 }
 
-internal extension Shelver {
-    func shelfWillDeinit(_ shelf: Shelf<Value>) {
-        guard shelf === self.shelf else { return }
+internal extension Box {
+    func itemWillDeinit(_ item: Item<Value>) {
+        guard item === self.item else { return }
         changed(nil)
     }
 }
 
-internal extension Shelver {
+internal extension Box {
     func changed(_ value: Value?) {
         notifySubscribers(value)
     }
 }
 
-public extension Shelver {
+public extension Box {
     public func subscribe(on queue: DispatchQueue? = nil, closure: @escaping (Value?) -> Void) -> Disposable {
         let closure = wrap(on: queue, closure: closure)
         return _subscribe(closure)
     }
 }
 
-public final class Shelf<Value> {
-    internal weak var shelver: Shelver<Value>?
+public final class Item<Value> {
+    internal weak var box: Box<Value>?
     internal let _value: Atomic<Value>
     
     public func access(_ closure: (inout Value) -> Void) {
         _value.access(closure)
     }
     
-    internal init(_ value: Value, shelver: Shelver<Value>) {
+    internal init(_ value: Value, box: Box<Value>) {
         self._value = Atomic(value)
-        self.shelver = shelver
+        self.box = box
     }
     
     deinit {
-        guard let shelver = shelver else { return }
-        shelver.shelfWillDeinit(self)
+        guard let box = box else { return }
+        box.itemWillDeinit(self)
     }
 }
 
-public extension Shelf {
+public extension Item {
     public var value: Value { return _value.value }
 }
+
+public final class Shelf<Key: Hashable, Value> {
+    fileprivate var dictionary: [Key: Box<Value>] = [:]
+    public init() { }
+}
+
+public extension Shelf {
+    subscript(_ key: Key) -> Box<Value> {
+        get {
+            guard let box = dictionary[key] else {
+                let box = Box<Value>()
+                dictionary[key] = box
+                return box
+            }
+            return box
+        }
+    }
+}
+
+
 
