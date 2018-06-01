@@ -25,9 +25,8 @@ public extension Store {
 }
 
 public extension Store {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil) -> Subscription where Subscriber.State == State {
-        let closure = wrap(on: queue) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
-        return _subscribe(closure)
+    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
+        return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
     }
 }
 

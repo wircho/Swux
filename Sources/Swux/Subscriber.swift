@@ -35,7 +35,7 @@ internal final class SubscriberDisposable<Subscribable: SubscribableProtocolBase
     
     func trigger() {
         guard let subscribable = subscribable else { return }
-        subscribable.notifySubscribers(subscribable.subscriptionValue)
+        subscribable.subscribers.value[ObjectIdentifier(self)]?(subscribable.subscriptionValue)
     }
     
     deinit {
@@ -44,8 +44,10 @@ internal final class SubscriberDisposable<Subscribable: SubscribableProtocolBase
 }
 
 internal extension SubscribableProtocolBase {
-    internal func _subscribe(_ closure: @escaping (SubscriptionValue) -> Void) -> Subscription {
+    internal func _subscribe(on queue: DispatchQueue?, triggerNow: Bool, _ closure: @escaping (SubscriptionValue) -> Void) -> Subscription {
+        let closure = wrap(on: queue, closure: closure)
         let disposable = SubscriberDisposable(subscribable: self)
+        if triggerNow { closure(subscriptionValue) }
         subscribers.access { $0[ObjectIdentifier(disposable)] = closure }
         return disposable
     }

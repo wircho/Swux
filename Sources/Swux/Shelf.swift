@@ -50,9 +50,8 @@ internal extension Box {
 }
 
 public extension Box {
-    public func subscribe(on queue: DispatchQueue? = nil, closure: @escaping (Value?) -> Void) -> Subscription {
-        let closure = wrap(on: queue, closure: closure)
-        return _subscribe(closure)
+    public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, closure: @escaping (Value?) -> Void) -> Subscription {
+       return _subscribe(on: queue, triggerNow: triggerNow, closure)
     }
 }
 
