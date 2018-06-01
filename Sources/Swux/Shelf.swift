@@ -70,3 +70,7 @@ public final class Shelf<Value> {
     }
 }
 
+public extension Shelf {
+    public var value: Value { return _value.value }
+}
+
