@@ -13,10 +13,14 @@ public enum DispatchMode {
 
 public final class Store<State>: SubscribableProtocolBase {
     internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = Atomic([:])
-    fileprivate let state: Atomic<State>
+    fileprivate let _state: Atomic<State>
     public init(_ state: State) {
-        self.state = Atomic(state)
+        self._state = Atomic(state)
     }
+}
+
+public extension Store {
+    public var state: State { return _state.value }
 }
 
 public extension Store {
@@ -33,8 +37,8 @@ public extension Store {
             self.notifySubscribers(state)
         }
         switch dispatchMode {
-        case .async: state.accessAsync(closure)
-        case .sync: state.access(closure)
+        case .async: _state.accessAsync(closure)
+        case .sync: _state.access(closure)
         }
     }
 }

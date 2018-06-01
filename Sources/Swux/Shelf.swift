@@ -20,6 +20,10 @@ public final class Shelver<Value>: SubscribableProtocolBase {
 }
 
 public extension Shelver {
+    public var value: Value? { return shelf?._value.value }
+}
+
+public extension Shelver {
     public func shelf(_ value: Value) -> Shelf<Value> {
         let shelf = Shelf(value, shelver: self)
         self.shelf = shelf
