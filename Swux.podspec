@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Swux'
-  s.version          = '0.2.1'
+  s.version          = '0.3.0'
   s.summary          = 'A Swiftier Redux'
 
   s.description      = <<-DESC
