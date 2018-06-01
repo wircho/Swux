@@ -18,6 +18,7 @@ public final class Box<Value>: SubscribableProtocolBase {
             changed(item?._value.value)
         }
     }
+    internal var subscriptionValue: Value? { return item?._value.value }
     internal var subscribers: Atomic<[ObjectIdentifier: (Value?) -> Void]> = Atomic([:])
     
     public init() { }
@@ -49,14 +50,14 @@ internal extension Box {
 }
 
 public extension Box {
-    public func subscribe(on queue: DispatchQueue? = nil, closure: @escaping (Value?) -> Void) -> Disposable {
+    public func subscribe(on queue: DispatchQueue? = nil, closure: @escaping (Value?) -> Void) -> Subscription {
         let closure = wrap(on: queue, closure: closure)
         return _subscribe(closure)
     }
 }
 
 public final class Item<Value> {
-    internal weak var box: Box<Value>?
+    public internal(set) weak var box: Box<Value>?
     internal let _value: Atomic<Value>
     
     public func access(_ closure: (inout Value) -> Void) {
@@ -90,7 +91,7 @@ public final class Shelf<Value: Shelved> {
 
 public extension Shelf {
     typealias Key = Value.Key
-    subscript(_ key: Key) -> Box<Value> {
+    public subscript(_ key: Key) -> Box<Value> {
         get {
             guard let box = dictionary[key] else {
                 let box = Box<Value>()

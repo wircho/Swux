@@ -14,24 +14,37 @@ public protocol SubscriberProtocol: AnyObject {
 
 internal protocol SubscribableProtocolBase: AnyObject {
     associatedtype SubscriptionValue
+    var subscriptionValue: SubscriptionValue { get }
     var subscribers: Atomic<[ObjectIdentifier: (SubscriptionValue) -> Void]> { get set }
 }
 
-public protocol Disposable: AnyObject {}
+public protocol Subscription: AnyObject {
+    func trigger()
+    func end()
+}
 
-internal final class SubscriberDisposable<Subscribable: SubscribableProtocolBase>: Disposable {
+internal final class SubscriberDisposable<Subscribable: SubscribableProtocolBase>: Subscription {
     weak var subscribable: Subscribable?
     
     init(subscribable: Subscribable) { self.subscribable = subscribable }
     
-    deinit {
+    func end() {
         guard let subscribable = subscribable else { return }
         subscribable.subscribers.access { $0[ObjectIdentifier(self)] = nil }
+    }
+    
+    func trigger() {
+        guard let subscribable = subscribable else { return }
+        subscribable.notifySubscribers(subscribable.subscriptionValue)
+    }
+    
+    deinit {
+        end()
     }
 }
 
 internal extension SubscribableProtocolBase {
-    internal func _subscribe(_ closure: @escaping (SubscriptionValue) -> Void) -> Disposable {
+    internal func _subscribe(_ closure: @escaping (SubscriptionValue) -> Void) -> Subscription {
         let disposable = SubscriberDisposable(subscribable: self)
         subscribers.access { $0[ObjectIdentifier(disposable)] = closure }
         return disposable

@@ -14,6 +14,7 @@ public enum DispatchMode {
 public final class Store<State>: SubscribableProtocolBase {
     internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = Atomic([:])
     fileprivate let _state: Atomic<State>
+    internal var subscriptionValue: State { return _state.value }
     public init(_ state: State) {
         self._state = Atomic(state)
     }
@@ -24,7 +25,7 @@ public extension Store {
 }
 
 public extension Store {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil) -> Disposable where Subscriber.State == State {
+    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil) -> Subscription where Subscriber.State == State {
         let closure = wrap(on: queue) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
         return _subscribe(closure)
     }
