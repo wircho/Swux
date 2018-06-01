@@ -15,6 +15,8 @@ public final class Shelver<Value>: SubscribableProtocolBase {
         }
     }
     internal var subscribers: Atomic<[ObjectIdentifier: (Value?) -> Void]> = Atomic([:])
+    
+    public init() { }
 }
 
 public extension Shelver {
