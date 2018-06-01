@@ -102,7 +102,7 @@ public extension Shelf {
     }
     
     public func item(_ value: Value) -> Item<Value> {
-        return self[value.key].item(value: value)
+        return self[value.key].item(value)
     }
 }
 
