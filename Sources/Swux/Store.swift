@@ -21,6 +21,14 @@ public final class Store<State>: SubscribableProtocolBase {
 }
 
 public extension Store {
+    public convenience init(_ closure: (Clerk) -> State) {
+        let clerk = Clerk()
+        self.init(closure(clerk))
+        clerk.active = false
+    }
+}
+
+public extension Store {
     public var state: State { return _state.value }
 }
 
@@ -34,6 +42,19 @@ public extension Store {
     public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State {
         let closure = { (state: inout State) in
             action.mutate(&state)
+            self.notifySubscribers(state)
+        }
+        switch dispatchMode {
+        case .async: _state.accessAsync(closure)
+        case .sync: _state.access(closure)
+        }
+    }
+    
+    public func dispatch<Action: ClerkedActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State {
+        let closure = { (state: inout State) in
+            let clerk = Clerk()
+            action.mutate(&state, clerk: clerk)
+            clerk.active = false
             self.notifySubscribers(state)
         }
         switch dispatchMode {

@@ -13,6 +13,8 @@
 		3E1B9D2C20C0F7680089B327 /* Queuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1B9D2A20C0F3EB0089B327 /* Queuing.swift */; };
 		3E3C8AA220C1CD0200EEF498 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3C8AA120C1CD0200EEF498 /* Box.swift */; };
 		3E3C8AA320C1CD1700EEF498 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3C8AA120C1CD0200EEF498 /* Box.swift */; };
+		3E3C8AC320C4678000EEF498 /* Clerk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3C8AC220C4678000EEF498 /* Clerk.swift */; };
+		3E3C8AC420C4678400EEF498 /* Clerk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3C8AC220C4678000EEF498 /* Clerk.swift */; };
 		3E9C292E20BF731500FED88A /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292920BF731500FED88A /* Subscriber.swift */; };
 		3E9C292F20BF731500FED88A /* WrappedStateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292A20BF731500FED88A /* WrappedStateAction.swift */; };
 		3E9C293020BF731500FED88A /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C292B20BF731500FED88A /* Atomic.swift */; };
@@ -29,6 +31,7 @@
 		3E1B9D2720C0B48C0089B327 /* Shelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shelf.swift; sourceTree = "<group>"; };
 		3E1B9D2A20C0F3EB0089B327 /* Queuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queuing.swift; sourceTree = "<group>"; };
 		3E3C8AA120C1CD0200EEF498 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
+		3E3C8AC220C4678000EEF498 /* Clerk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clerk.swift; sourceTree = "<group>"; };
 		3E9C290820BF716800FED88A /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9C290C20BF716800FED88A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E9C291820BF71D900FED88A /* Swux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Swux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +97,7 @@
 				3E9C292D20BF731500FED88A /* Action.swift */,
 				3E3C8AA120C1CD0200EEF498 /* Box.swift */,
 				3E1B9D2720C0B48C0089B327 /* Shelf.swift */,
+				3E3C8AC220C4678000EEF498 /* Clerk.swift */,
 			);
 			name = Swux;
 			path = Sources/Swux;
@@ -220,6 +224,7 @@
 				3E3C8AA220C1CD0200EEF498 /* Box.swift in Sources */,
 				3E1B9D2B20C0F3EB0089B327 /* Queuing.swift in Sources */,
 				3E9C293120BF731500FED88A /* Store.swift in Sources */,
+				3E3C8AC320C4678000EEF498 /* Clerk.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,6 +240,7 @@
 				3E3C8AA320C1CD1700EEF498 /* Box.swift in Sources */,
 				3E1B9D2C20C0F7680089B327 /* Queuing.swift in Sources */,
 				3E9C293620BF731A00FED88A /* Store.swift in Sources */,
+				3E3C8AC420C4678400EEF498 /* Clerk.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

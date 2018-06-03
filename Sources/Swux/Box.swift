@@ -13,7 +13,7 @@
 import Foundation
 
 public final class Box<Value>: SubscribableProtocolBase {
-    internal weak var item: Item<Value>? = nil {
+    public internal(set) weak var item: Item<Value>? = nil {
         didSet {
             oldValue?.box = nil
             changed(item?._value.value)
@@ -25,12 +25,8 @@ public final class Box<Value>: SubscribableProtocolBase {
     public init() { }
 }
 
-public extension Box {
-    public var value: Value? { return item?._value.value }
-}
-
-public extension Box {
-    public func item(_ value: Value) -> Item<Value> {
+internal extension Box {
+    internal func item(_ value: Value) -> Item<Value> {
         let item = Item(value, box: self)
         self.item = item
         return item
@@ -59,10 +55,6 @@ public extension Box {
 public final class Item<Value> {
     public internal(set) weak var box: Box<Value>?
     internal let _value: Atomic<Value>
-    
-    public func access(_ closure: (inout Value) -> Void) {
-        _value.access(closure)
-    }
     
     internal init(_ value: Value, box: Box<Value>) {
         self._value = Atomic(value)

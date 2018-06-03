@@ -9,3 +9,8 @@ public protocol ActionProtocol {
     associatedtype State
     func mutate(_ state: inout State) -> Void
 }
+
+public protocol ClerkedActionProtocol {
+    associatedtype State
+    func mutate(_ state: inout State, clerk: Clerk) -> Void
+}
