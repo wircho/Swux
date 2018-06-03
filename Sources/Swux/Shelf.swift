@@ -21,7 +21,10 @@ public final class Shelf<Value: Shelved> {
 
 public extension Shelf {
     typealias Key = Value.Key
-    public subscript(_ key: Key) -> Box<Value> {
+}
+
+public extension Shelf {
+    internal subscript(_ key: Key) -> Box<Value> {
         get {
             guard let box = dictionary[key] else {
                 let box = Box<Value>()
@@ -32,8 +35,8 @@ public extension Shelf {
         }
     }
     
-    public func item(_ value: Value) -> Item<Value> {
-        return self[value.key].item(value)
+    public func item(at key: Key) -> Item<Value>? {
+        return dictionary[key]?.item
     }
 }
 

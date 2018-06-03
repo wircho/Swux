@@ -19,6 +19,13 @@ public extension Clerk {
         return box.item(value)
     }
     
+    public func item<T: Shelved>(_ value: T, in shelf: Shelf<T>) -> Item<T> {
+        guard active else {
+            fatalError("Clerk is inactive")
+        }
+        return shelf[value.key].item(value)
+    }
+    
     public func access<T>(_ item: Item<T>, closure: (inout T) -> Void) {
         guard active else {
             fatalError("Clerk is inactive")
