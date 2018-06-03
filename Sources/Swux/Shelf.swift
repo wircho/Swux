@@ -9,6 +9,8 @@
  Types Item, Box, Shelf are experimental
  */
 
+import Foundation
+
 public protocol Shelved {
     associatedtype Key: Hashable
     var key: Key { get }
@@ -37,6 +39,12 @@ public extension Shelf {
     
     public func item(at key: Key) -> Item<Value>? {
         return dictionary[key]?.item
+    }
+}
+
+public extension Shelf {
+    public func subscribe(at key: Key, on queue: DispatchQueue? = nil, triggerNow: Bool = false, closure: @escaping (Value?) -> Void) -> Subscription {
+        return self[key].subscribe(on: queue, triggerNow: triggerNow, closure: closure)
     }
 }
 
