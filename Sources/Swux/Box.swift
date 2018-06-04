@@ -7,12 +7,18 @@
 //
 
 /*
- Types Item, Box, Shelf are experimental
+ Types Item, Box, Shelf, and Clerk are experimental
  */
 
 import Foundation
 
-public final class Box<Value>: SubscribableProtocolBase {
+internal protocol BoxProtocol: SubscribableProtocolBase { }
+
+internal extension BoxProtocol {
+    func changed(_ value: SubscriptionValue) { notifySubscribers(value) }
+}
+
+public final class Box<Value>: BoxProtocol {
     public internal(set) weak var item: Item<Value>? = nil {
         didSet {
             oldValue?.box = nil
@@ -21,13 +27,16 @@ public final class Box<Value>: SubscribableProtocolBase {
     }
     internal var subscriptionValue: Value? { return item?._value.value }
     internal var subscribers: Atomic<[ObjectIdentifier: (Value?) -> Void]> = Atomic([:])
+    internal weak var stamp: ClerkStamp? = nil
     
     public init() { }
 }
 
 internal extension Box {
-    internal func item(_ value: Value) -> Item<Value> {
-        let item = Item(value, box: self)
+    internal func item(_ value: Value, stamp: ClerkStamp) -> Item<Value> {
+        guard self.stamp == nil else { fatalError("Clerks may not access a box's content more than once per action.") }
+        self.stamp = stamp
+        let item = Item(value, box: self, sealedBox: nil)
         self.item = item
         return item
     }
@@ -40,35 +49,10 @@ internal extension Box {
     }
 }
 
-internal extension Box {
-    func changed(_ value: Value?) {
-        notifySubscribers(value)
-    }
-}
-
 public extension Box {
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, closure: @escaping (Value?) -> Void) -> Subscription {
         return _subscribe(on: queue, triggerNow: triggerNow, closure)
     }
-}
-
-public final class Item<Value> {
-    public internal(set) weak var box: Box<Value>?
-    internal let _value: Atomic<Value>
-    
-    internal init(_ value: Value, box: Box<Value>) {
-        self._value = Atomic(value)
-        self.box = box
-    }
-    
-    deinit {
-        guard let box = box else { return }
-        box.itemWillDeinit(self)
-    }
-}
-
-public extension Item {
-    public var value: Value { return _value.value }
 }
 
 

@@ -6,7 +6,7 @@
 //
 
 /*
- Types Item, Box, Shelf are experimental
+ Types Item, Box, Shelf, and Clerk are experimental
  */
 
 import Foundation
