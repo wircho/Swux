@@ -45,7 +45,11 @@ internal extension StoreProtocol {
     }
     
     internal func _dispatch(_ state: MutateState, dispatchMode: DispatchMode) {
-        _dispatch(MutateAction(state), dispatchMode: dispatchMode)
+        _dispatch(SetAction(state), dispatchMode: dispatchMode)
+    }
+    
+    internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<MutateState>) {
+        _dispatch(MutateAction(closure), dispatchMode: dispatchMode)
     }
 }
 
@@ -89,6 +93,10 @@ public extension Store {
     
     public func dispatch(_ state: State, dispatchMode: DispatchMode = .sync) {
         _dispatch(state, dispatchMode: dispatchMode)
+    }
+    
+    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<State>) {
+        _dispatch(dispatchMode: dispatchMode, closure)
     }
 }
 
@@ -175,6 +183,10 @@ public extension OptionalStore {
     
     public func dispatch(_ state: State, dispatchMode: DispatchMode = .sync) {
         _dispatch(state, dispatchMode: dispatchMode)
+    }
+    
+    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<State>) {
+        _dispatch(dispatchMode: dispatchMode, closure)
     }
 }
 
