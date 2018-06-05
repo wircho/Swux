@@ -54,7 +54,11 @@ internal extension SubscribableProtocolBase {
 }
 
 internal extension SubscribableProtocolBase {
-    internal func notifySubscribers(_ value: SubscriptionValue) {
+    internal func notify() {
+        notify(self.subscriptionValue)
+    }
+    
+    internal func notify(_ value: SubscriptionValue) {
         for callback in self.subscribers.value.values { callback(value) }
     }
 }
