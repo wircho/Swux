@@ -59,7 +59,7 @@ public final class Store<State>: StoreProtocol {
     internal let _state: AnyAtomic<State, State>
     internal var upstream: [() -> Void]
     internal var downstream: [() -> Void]
-    internal var subscriptionValue: State { return _state.value }
+    internal var subscriptionValue: State { return _state._value }
     
     internal init<A: AtomicProtocol>(_ atomic: A, upstream: [() -> Void], downstream: [() -> Void]) where A.GetValue == State, A.MutateValue == State {
         _state = AnyAtomic(atomic)
@@ -151,7 +151,7 @@ public final class OptionalStore<State>: StoreProtocol {
     internal let _state: AnyAtomic<State?, State>
     internal var upstream: [() -> Void]
     internal var downstream: [() -> Void]
-    internal var subscriptionValue: State? { return _state.value }
+    internal var subscriptionValue: State? { return _state._value }
     
     internal init<A: AtomicProtocol>(_ atomic: A, upstream: [() -> Void], downstream: [() -> Void]) where A.GetValue == State?, A.MutateValue == State {
         _state = AnyAtomic(atomic)

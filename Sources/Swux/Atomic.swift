@@ -116,7 +116,7 @@ final internal class AtomicMerge2<Input0, Input1, Output>: AtomicProtocol {
     internal var atomic1: AnyAtomic<Input1, Input1>
     internal var transform: (Input0, Input1) -> Output
     internal var traverse: (Mutator<Output>) -> (Mutator<Input0>, Mutator<Input1>)
-    internal var _value: Output { return transform(atomic0._value, atomic1.value) }
+    internal var _value: Output { return transform(atomic0._value, atomic1._value) }
     internal var queue: DispatchQueue { return atomic0.queue }
     
     internal init(_ atomic0: AnyAtomic<Input0, Input0>, _ atomic1: AnyAtomic<Input1, Input1>, transform: @escaping (Input0, Input1) -> Output, traverse: @escaping (Mutator<Output>) -> (Mutator<Input0>, Mutator<Input1>)) {
@@ -140,7 +140,7 @@ final internal class AtomicMerge3<Input0, Input1, Input2, Output>: AtomicProtoco
     internal var atomic2: AnyAtomic<Input2, Input2>
     internal var transform: (Input0, Input1, Input2) -> Output
     internal var traverse: (Mutator<Output>) -> (Mutator<Input0>, Mutator<Input1>, Mutator<Input2>)
-    internal var _value: Output { return transform(atomic0._value, atomic1.value, atomic2.value) }
+    internal var _value: Output { return transform(atomic0._value, atomic1._value, atomic2._value) }
     internal var queue: DispatchQueue { return atomic0.queue }
     
     internal init(_ atomic0: AnyAtomic<Input0, Input0>, _ atomic1: AnyAtomic<Input1, Input1>, _ atomic2: AnyAtomic<Input2, Input2>, transform: @escaping (Input0, Input1, Input2) -> Output, traverse: @escaping (Mutator<Output>) -> (Mutator<Input0>, Mutator<Input1>, Mutator<Input2>)) {
@@ -167,7 +167,7 @@ final internal class AtomicMerge4<Input0, Input1, Input2, Input3, Output>: Atomi
     internal var atomic3: AnyAtomic<Input3, Input3>
     internal var transform: (Input0, Input1, Input2, Input3) -> Output
     internal var traverse: (Mutator<Output>) -> (Mutator<Input0>, Mutator<Input1>, Mutator<Input2>, Mutator<Input3>)
-    internal var _value: Output { return transform(atomic0._value, atomic1.value, atomic2.value, atomic3.value) }
+    internal var _value: Output { return transform(atomic0._value, atomic1._value, atomic2._value, atomic3._value) }
     internal var queue: DispatchQueue { return atomic0.queue }
     
     internal init(_ atomic0: AnyAtomic<Input0, Input0>, _ atomic1: AnyAtomic<Input1, Input1>, _ atomic2: AnyAtomic<Input2, Input2>, _ atomic3: AnyAtomic<Input3, Input3>, transform: @escaping (Input0, Input1, Input2, Input3) -> Output, traverse: @escaping (Mutator<Output>) -> (Mutator<Input0>, Mutator<Input1>, Mutator<Input2>, Mutator<Input3>)) {
