@@ -84,6 +84,10 @@ public extension Store {
     public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
         return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
     }
+    
+    public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
+        return _subscribe(on: queue, triggerNow: triggerNow, closure)
+    }
 }
 
 public extension Store {
@@ -171,6 +175,10 @@ public extension OptionalStore {
 public extension OptionalStore {
     public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State? {
         return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
+    }
+    
+    public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State?) -> Void) -> Subscription {
+        return _subscribe(on: queue, triggerNow: triggerNow, closure)
     }
 }
 
