@@ -10,16 +10,31 @@
  Types Item, Box, Shelf, and Clerk are experimental
  */
 
-internal class ClerkStamp {
-    
-}
+import Foundation
+
+internal class ClerkStamp { }
 
 public class Clerk {
     internal weak var stamp: ClerkStamp?
+    internal var callbacks: [ObjectIdentifier: () -> Void] = [:]
     internal init() { }
 }
 
 public extension Clerk {
+    private func shouldNotify<Value>(_ box: Box<Value>?) -> Void {
+        guard let box = box else { return }
+        callbacks[ObjectIdentifier(box)] = { [weak box] in box?.notifySubscribers(box?.item?.value) }
+    }
+    
+    private func shouldNotify<Value>(_ sealedBox: SealedBox<Value>?) -> Void {
+        guard let sealedBox = sealedBox else { return }
+        callbacks[ObjectIdentifier(sealedBox)] = {
+            [weak sealedBox] in
+            guard let sealedBox = sealedBox else { return }
+            sealedBox.notifySubscribers(sealedBox.item.value)
+        }
+    }
+    
     public func item<T>(_ value: T, in box: Box<T>) -> Item<T> {
         guard let stamp = stamp else { fatalError("Clerk is inactive") }
         return box.item(value, stamp: stamp)
@@ -38,5 +53,7 @@ public extension Clerk {
     public func access<T>(_ item: Item<T>, closure: (inout T) -> Void) {
         guard let stamp = stamp else { fatalError("Clerk is inactive") }
         item.access(stamp: stamp, closure)
+        shouldNotify(item.box)
+        shouldNotify(item.sealedBox)
     }
 }

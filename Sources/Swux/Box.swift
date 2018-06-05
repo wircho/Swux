@@ -14,16 +14,9 @@ import Foundation
 
 internal protocol BoxProtocol: SubscribableProtocolBase { }
 
-internal extension BoxProtocol {
-    func changed(_ value: SubscriptionValue) { notifySubscribers(value) }
-}
-
 public final class Box<Value>: BoxProtocol {
     public internal(set) weak var item: Item<Value>? = nil {
-        didSet {
-            oldValue?.box = nil
-            changed(item?._value.value)
-        }
+        didSet { oldValue?.box = nil }
     }
     internal var subscriptionValue: Value? { return item?._value.value }
     internal var subscribers: Atomic<[ObjectIdentifier: (Value?) -> Void]> = Atomic([:])
@@ -34,7 +27,7 @@ public final class Box<Value>: BoxProtocol {
 
 internal extension Box {
     internal func item(_ value: Value, stamp: ClerkStamp) -> Item<Value> {
-        guard self.stamp == nil else { fatalError("Clerks may not access a box's content more than once per action.") }
+        guard self.stamp == nil || self.stamp === stamp else { fatalError("Two different clerks may not access an box at the same time.") }
         self.stamp = stamp
         let item = Item(value, box: self, sealedBox: nil)
         self.item = item
@@ -45,7 +38,7 @@ internal extension Box {
 internal extension Box {
     func itemWillDeinit(_ item: Item<Value>) {
         guard item === self.item else { return }
-        changed(nil)
+        notifySubscribers(nil)
     }
 }
 

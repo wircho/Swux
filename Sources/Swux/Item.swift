@@ -29,11 +29,9 @@ public final class Item<Value> {
 
 internal extension Item {
     internal func access(stamp: ClerkStamp, _ closure: (inout Value) -> Void) {
-        guard self.stamp == nil else { fatalError("Clerks may not access a box's content more than once per action.") }
+        guard self.stamp == nil || self.stamp === stamp else { fatalError("Two different clerks may not access an item at the same time.") }
         _value.access(closure)
-        let value = self.value
-        box?.changed(value)
-        sealedBox?.changed(value)
+        self.stamp = stamp
     }
 }
 

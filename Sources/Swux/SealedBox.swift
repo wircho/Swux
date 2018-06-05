@@ -13,11 +13,7 @@
 import Foundation
 
 public final class SealedBox<Value>: BoxProtocol {
-    public internal(set) var item: Item<Value> {
-        didSet {
-            changed(item._value.value)
-        }
-    }
+    public internal(set) var item: Item<Value>
     internal var subscriptionValue: Value { return item._value.value }
     internal var subscribers: Atomic<[ObjectIdentifier: (Value) -> Void]> = Atomic([:])
     internal weak var stamp: ClerkStamp? = nil
@@ -30,7 +26,7 @@ public final class SealedBox<Value>: BoxProtocol {
 
 internal extension SealedBox {
     internal func item(_ value: Value, stamp: ClerkStamp) -> Item<Value> {
-        guard self.stamp == nil else { fatalError("Clerks may not access a box's content more than once per action.") }
+        guard self.stamp == nil || self.stamp === stamp else { fatalError("Two different clerks may not access a sealed box at the same time.") }
         self.stamp = stamp
         let item = Item(value, box: nil, sealedBox: self)
         self.item = item

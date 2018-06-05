@@ -59,6 +59,7 @@ public extension Store {
             clerk.stamp = stamp
             action.mutate(&state, clerk: clerk)
             stamp = nil
+            for (_, callback) in clerk.callbacks { callback() }
             self.notifySubscribers(state)
         }
         switch dispatchMode {
