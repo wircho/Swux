@@ -12,9 +12,7 @@ public enum DispatchMode {
 }
 
 internal protocol OneDirectional: AnyObject {
-    var upstream: [() -> Void] { get set }
     var downstream: [() -> Void] { get set }
-    func notifyUpstream()
     func notifyDownstream()
 }
 
@@ -22,17 +20,11 @@ internal protocol StoreProtocol: SubscribableProtocolBase, OneDirectional {
     associatedtype GetState
     associatedtype MutateState
     var _state: AnyAtomic<GetState, MutateState> { get }
-    var upstream: [() -> Void] { get }
     var downstream: [() -> Void] { get }
     func notifyMutateState(_ state: MutateState)
 }
 
 internal extension StoreProtocol {
-    internal func notifyUpstream() {
-        notify()
-        upstream.forEach { $0() }
-    }
-    
     internal func notifyDownstream() {
         notify()
         downstream.forEach { $0() }
@@ -44,7 +36,6 @@ internal extension StoreProtocol {
         let closure = { (state: inout MutateState) in
             action.mutate(&state)
             self.notifyMutateState(state)
-            self.upstream.forEach { $0() }
             self.downstream.forEach { $0() }
         }
         switch dispatchMode {
@@ -52,24 +43,25 @@ internal extension StoreProtocol {
         case .sync: _state.access(closure)
         }
     }
+    
+    internal func _dispatch(_ state: MutateState, dispatchMode: DispatchMode) {
+        _dispatch(MutateAction(state), dispatchMode: dispatchMode)
+    }
 }
 
 public final class Store<State>: StoreProtocol {
     internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = Atomic([:])
     internal let _state: AnyAtomic<State, State>
-    internal var upstream: [() -> Void]
     internal var downstream: [() -> Void]
     internal var subscriptionValue: State { return _state._value }
     
-    internal init<A: AtomicProtocol>(_ atomic: A, upstream: [() -> Void], downstream: [() -> Void]) where A.GetValue == State, A.MutateValue == State {
+    internal init<A: AtomicProtocol>(_ atomic: A, downstream: [() -> Void]) where A.GetValue == State, A.MutateValue == State {
         _state = AnyAtomic(atomic)
-        self.upstream = upstream
         self.downstream = downstream
     }
     
     public init(_ state: State) {
         _state = AnyAtomic(Atomic(state))
-        upstream = []
         downstream = []
     }
     
@@ -94,6 +86,10 @@ public extension Store {
     public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State {
         _dispatch(action, dispatchMode: dispatchMode)
     }
+    
+    public func dispatch(_ state: State, dispatchMode: DispatchMode = .sync) {
+        _dispatch(state, dispatchMode: dispatchMode)
+    }
 }
 
 public typealias UMP = UnsafeMutablePointer
@@ -102,7 +98,6 @@ public extension Store {
     public func map<OtherState>(transform: @escaping (State) -> OtherState, traverse: @escaping MutatorMap<OtherState, State>) -> Store<OtherState> {
         let store = Store<OtherState>(
             AtomicMap(_state, transform: transform, traverse: traverse),
-            upstream: [{ [weak self] in self?.notifyUpstream() }],
             downstream: []
         )
         downstream.append { [weak store] in store?.notifyDownstream() }
@@ -118,30 +113,24 @@ public extension Store {
     public static func merge<S0, S1, State>(_ s0: Store<S0>, _ s1: Store<S1>, transform: @escaping (S0, S1) -> State, traverse: @escaping (Mutator<State>) -> (Mutator<S0>, Mutator<S1>)) -> Store<State> {
         let store = Store<State>(
             AtomicMerge2(s0._state, s1._state, transform: transform, traverse: traverse),
-            upstream: [],
             downstream: [{ [weak s0, weak s1] in ([s0, s1] as [OneDirectional?]).forEach { $0?.notifyDownstream() } }]
         )
-        ([s0, s1] as [OneDirectional]).forEach { $0.upstream.append { [weak store] in store?.notifyUpstream() } }
         return store
     }
     
     public static func merge<S0, S1, S2, State>(_ s0: Store<S0>, _ s1: Store<S1>, _ s2: Store<S2>, transform: @escaping (S0, S1, S2) -> State, traverse: @escaping (Mutator<State>) -> (Mutator<S0>, Mutator<S1>, Mutator<S2>)) -> Store<State> {
         let store = Store<State>(
             AtomicMerge3(s0._state, s1._state, s2._state, transform: transform, traverse: traverse),
-            upstream: [],
             downstream: [{ [weak s0, weak s1, weak s2] in ([s0, s1, s2] as [OneDirectional?]).forEach { $0?.notifyDownstream() } }]
         )
-        ([s0, s1, s2] as [OneDirectional]).forEach { $0.upstream.append { [weak store] in store?.notifyUpstream() } }
         return store
     }
     
     public static func merge<S0, S1, S2, S3, State>(_ s0: Store<S0>, _ s1: Store<S1>, _ s2: Store<S2>, _ s3: Store<S3>, transform: @escaping (S0, S1, S2, S3) -> State, traverse: @escaping (Mutator<State>) -> (Mutator<S0>, Mutator<S1>, Mutator<S2>, Mutator<S3>)) -> Store<State> {
         let store = Store<State>(
             AtomicMerge4(s0._state, s1._state, s2._state, s3._state, transform: transform, traverse: traverse),
-            upstream: [],
             downstream: [{ [weak s0, weak s1, weak s2, weak s3] in ([s0, s1, s2, s3] as [OneDirectional?]).forEach { $0?.notifyDownstream() } }]
         )
-        ([s0, s1, s2, s3] as [OneDirectional]).forEach { $0.upstream.append { [weak store] in store?.notifyUpstream() } }
         return store
     }
 }
@@ -149,19 +138,16 @@ public extension Store {
 public final class OptionalStore<State>: StoreProtocol {
     internal var subscribers: Atomic<[ObjectIdentifier: (State?) -> Void]> = Atomic([:])
     internal let _state: AnyAtomic<State?, State>
-    internal var upstream: [() -> Void]
     internal var downstream: [() -> Void]
     internal var subscriptionValue: State? { return _state._value }
     
-    internal init<A: AtomicProtocol>(_ atomic: A, upstream: [() -> Void], downstream: [() -> Void]) where A.GetValue == State?, A.MutateValue == State {
+    internal init<A: AtomicProtocol>(_ atomic: A, downstream: [() -> Void]) where A.GetValue == State?, A.MutateValue == State {
         _state = AnyAtomic(atomic)
-        self.upstream = upstream
         self.downstream = downstream
     }
     
     public init(_ state: State? = nil) {
         _state = AnyAtomic(OptionalAtomic(state))
-        upstream = []
         downstream = []
     }
     
@@ -186,13 +172,16 @@ public extension OptionalStore {
     public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State {
         _dispatch(action, dispatchMode: dispatchMode)
     }
+    
+    public func dispatch(_ state: State, dispatchMode: DispatchMode = .sync) {
+        _dispatch(state, dispatchMode: dispatchMode)
+    }
 }
 
 public extension Store {
     public func optionalMap<OtherState>(transform: @escaping (State) -> OtherState?, traverse: @escaping MutatorMap<OtherState, State>) -> OptionalStore<OtherState> {
         let store = OptionalStore<OtherState>(
             OptionalAtomicMap(_state, transform: transform, traverse: traverse),
-            upstream: [{ [weak self] in self?.notifyUpstream() }],
             downstream: []
         )
         downstream.append { [weak store] in store?.notifyDownstream() }

@@ -29,7 +29,6 @@ public final class Mall<Key: Hashable, Value> {
             }
             let store = OptionalStore(
                 OptionalAtomicMap<[Key: Value], Value>(dictionaryStore._state, transform: transform, traverse: traverse),
-                upstream: [{ [weak dictionaryStore] in dictionaryStore?.notifyUpstream() }],
                 downstream: []
             )
             stores[key] = store
