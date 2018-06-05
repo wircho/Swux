@@ -215,20 +215,3 @@ public extension Store {
         return optionalMap(transform: transform, traverse: traverse)
     }
 }
-
-public extension Store where State: ExpressibleByNilLiteral {
-    public func optionalMap<OtherState>(_ keyPath: WritableKeyPath<State, OtherState?>) -> OptionalStore<OtherState> {
-        let transform: (State) -> OtherState? = { state in return state[keyPath: keyPath] }
-        let traverse: MutatorMap<OtherState, State> = {
-            mutator in
-            return {
-                (state: inout State) in
-                guard var otherState = state[keyPath: keyPath] else { return }
-                state = nil
-                mutator(&otherState)
-                state[keyPath: keyPath] = otherState
-            }
-        }
-        return optionalMap(transform: transform, traverse: traverse)
-    }
-}
