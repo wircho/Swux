@@ -21,3 +21,21 @@ internal struct MutateAction<State>: ActionProtocol {
     init(_ mutator: @escaping Mutator<State>) { self.mutator = mutator }
     func mutate(_ state: inout State) { mutator(&state) }
 }
+
+public protocol OptionalProtocol: ExpressibleByNilLiteral {
+    associatedtype Wrapped
+    func map<T>(_ transform: (Wrapped) throws -> T) rethrows -> T?
+    init(_ some: Wrapped)
+}
+extension Optional: OptionalProtocol { }
+
+internal struct OptionalAction<Action: ActionProtocol, State>: ActionProtocol where State: OptionalProtocol, State.Wrapped == Action.State {
+    let innerAction: Action
+    init(_ innerAction: Action) { self.innerAction = innerAction }
+    func mutate(_ state: inout State) {
+        guard var unwrappedState = state.map({ $0 }) else { return }
+        state = nil
+        innerAction.mutate(&unwrappedState)
+        state = State(unwrappedState)
+    }
+}

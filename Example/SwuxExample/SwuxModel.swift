@@ -66,9 +66,8 @@ internal struct Start: ActionProtocol {
     }
 }
 
-internal struct Jump: WrappedStateActionProtocol {
-    typealias State = AppState?
-    func mutateWrapped(_ state: inout AppState) {
+internal struct Jump: ActionProtocol {
+    func mutate(_ state: inout AppState) {
         guard state.ballSpeed == nil else { return }
         let r = 2 * drand48() - 1
         state.onFloor = false
@@ -76,9 +75,8 @@ internal struct Jump: WrappedStateActionProtocol {
     }
 }
 
-internal struct NextFrame: WrappedStateActionProtocol {
-    typealias State = AppState?
-    func mutateWrapped(_ state: inout AppState) {
+internal struct NextFrame: ActionProtocol {
+    func mutate(_ state: inout AppState) {
         guard var ballSpeed = state.ballSpeed else { return }
         // Apply gravity
         ballSpeed.dy += gravity
@@ -119,10 +117,9 @@ internal struct NextFrame: WrappedStateActionProtocol {
     }
 }
 
-internal struct ChangeCanvasSize: WrappedStateActionProtocol {
-    typealias State = AppState?
+internal struct ChangeCanvasSize: ActionProtocol {
     let size: CGSize
-    func mutateWrapped(_ state: inout AppState) {
+    func mutate(_ state: inout AppState) {
         let oldSize = state.canvasSize
         state.canvasSize = size
         guard abs(size - oldSize) > importantSizeChange else { return }
