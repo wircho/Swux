@@ -14,11 +14,15 @@ public protocol StoreProtocol: AtomicProtocol, SubscribableProtocol {
     var state: State { get }
 }
 
-internal protocol _StoreProtocol: StoreProtocol, _AtomicProtocol, _SubscribableProtocol {
+internal protocol _GenericStoreProtocol: StoreProtocol, _SubscribableProtocol {
     var downstream: [() -> Void] { get set }
 }
 
-internal extension _StoreProtocol {
+internal protocol _ReadOnlyStoreProtocol: _GenericStoreProtocol { }
+
+internal protocol _StoreProtocol: _GenericStoreProtocol, _AtomicProtocol { }
+
+internal extension _GenericStoreProtocol {
     internal func notifyDownstream() {
         notify()
         downstream.forEach { $0() }
@@ -45,14 +49,12 @@ internal extension _StoreProtocol {
     internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<MutatingState>) {
         _dispatch(MutateAction(closure), dispatchMode: dispatchMode)
     }
-}
-
-internal extension _StoreProtocol where MutatingState: OptionalProtocol {
-    internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == MutatingState.Wrapped {
+    
+    internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where MutatingState == Action.State? {
         _dispatch(OptionalAction(action), dispatchMode: dispatchMode)
     }
-
-    internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<MutatingState.Wrapped>) {
+    
+    internal func _dispatch<WrappedState>(dispatchMode: DispatchMode, _ closure: @escaping Mutator<WrappedState>) where MutatingState == WrappedState? {
         _dispatch(MutateAction(closure), dispatchMode: dispatchMode)
     }
 }
@@ -96,14 +98,12 @@ public extension Store {
     public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<State>) {
         _dispatch(dispatchMode: dispatchMode, closure)
     }
-}
-
-public extension Store where State: OptionalProtocol {
-    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State.Wrapped {
+    
+    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where State == Action.State? {
         _dispatch(action, dispatchMode: dispatchMode)
     }
 
-    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<State.Wrapped>) {
+    public func dispatch<WrappedState>(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<WrappedState>) where State == WrappedState? {
         _dispatch(dispatchMode: dispatchMode, closure)
     }
 }

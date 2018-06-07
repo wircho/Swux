@@ -9,12 +9,12 @@
 import Foundation
 
 public final class KeyPathStore<InputState, State> {
-    internal let inputStore: AnyStore<InputState>
+    internal let inputStore: AnyStore<InputState, InputState>
     internal let keyPath: WritableKeyPath<InputState, State>
     internal var downstream: [() -> Void] = []
     var subscribers: Atomic<[ObjectIdentifier : (State) -> Void]> = .init([:])
     
-    internal init(_ inputStore: AnyStore<InputState>, keyPath: WritableKeyPath<InputState, State>) {
+    internal init(_ inputStore: AnyStore<InputState, InputState>, keyPath: WritableKeyPath<InputState, State>) {
         self.inputStore = inputStore
         self.keyPath = keyPath
         inputStore.appendDownstream { [weak self] in self?.notifyDownstream() }
@@ -22,7 +22,7 @@ public final class KeyPathStore<InputState, State> {
 }
 
 internal extension KeyPathStore {
-    internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, State>) where InputStore.State == InputState {
+    internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, State>) where InputStore.State == InputState, InputStore.MutatingState == InputState {
         self.init(AnyStore(inputStore), keyPath: keyPath)
     }
 }
@@ -55,14 +55,12 @@ public extension KeyPathStore {
     public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<State>) {
         _dispatch(dispatchMode: dispatchMode, closure)
     }
-}
-
-public extension KeyPathStore where State: OptionalProtocol {
-    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State.Wrapped {
+    
+    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where State == Action.State? {
         _dispatch(action, dispatchMode: dispatchMode)
     }
     
-    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<State.Wrapped>) {
+    public func dispatch<WrappedState>(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<WrappedState>) where State == WrappedState? {
         _dispatch(dispatchMode: dispatchMode, closure)
     }
 }

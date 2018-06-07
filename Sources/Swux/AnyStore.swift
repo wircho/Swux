@@ -8,13 +8,13 @@
 
 import Foundation
 
-internal class AnyStore<State> {
+internal class AnyStore<State, MutatingState> {
     fileprivate let getQueue: () -> DispatchQueue
     fileprivate let getState: () -> State
-    fileprivate let performMutator: (Mutator<State>) -> Void
+    fileprivate let performMutator: (Mutator<MutatingState>) -> Void
     internal let appendDownstream: (@escaping () -> Void) -> Void
     
-    internal init<S: _StoreProtocol>(_ store: S) where S.State == State {
+    internal init<S: _StoreProtocol>(_ store: S) where S.State == State, S.MutatingState == MutatingState {
         getQueue = { store.queue }
         getState = { store.state }
         performMutator = { store.perform($0) }
@@ -25,5 +25,5 @@ internal class AnyStore<State> {
 internal extension AnyStore {
     var queue: DispatchQueue { return getQueue() }
     var state: State { return getState() }
-    func perform(_ closure: Mutator<State>) { performMutator(closure) }
+    func perform(_ closure: Mutator<MutatingState>) { performMutator(closure) }
 }
