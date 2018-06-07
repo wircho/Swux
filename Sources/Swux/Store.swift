@@ -26,10 +26,10 @@ internal extension _StoreProtocol {
 }
 
 internal extension _StoreProtocol {
-    internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == State {
-        let closure: Mutator<State> = { state in
-            action.mutate(&state)
-            self.notify(state)
+    internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == MutatingState {
+        let closure: Mutator<MutatingState> = { mutatingState in
+            action.mutate(&mutatingState)
+            self.notify(Self.state(mutatingState: mutatingState))
             self.downstream.forEach { $0() }
         }
         switch dispatchMode {
@@ -38,21 +38,21 @@ internal extension _StoreProtocol {
         }
     }
 
-    internal func _dispatch(_ value: State, dispatchMode: DispatchMode) {
+    internal func _dispatch(_ value: MutatingState, dispatchMode: DispatchMode) {
         _dispatch(SetAction(value), dispatchMode: dispatchMode)
     }
 
-    internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<State>) {
+    internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<MutatingState>) {
         _dispatch(MutateAction(closure), dispatchMode: dispatchMode)
     }
 }
 
-internal extension _StoreProtocol where State: OptionalProtocol {
-    internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == State.Wrapped {
+internal extension _StoreProtocol where MutatingState: OptionalProtocol {
+    internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == MutatingState.Wrapped {
         _dispatch(OptionalAction(action), dispatchMode: dispatchMode)
     }
 
-    internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<State.Wrapped>) {
+    internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<MutatingState.Wrapped>) {
         _dispatch(MutateAction(closure), dispatchMode: dispatchMode)
     }
 }
@@ -69,7 +69,7 @@ public final class Store<State> {
     }
 }
 
-extension Store: _StoreProtocol {
+extension Store: _StoreProtocol, _SimpleAtomicProtocol {
     public var state: State { return queue.sync { _state } }
     func perform(_ closure: Mutator<State>) { closure(&_state) }
 }

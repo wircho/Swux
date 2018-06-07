@@ -13,41 +13,62 @@ internal enum OptionalKeyPath<Root, Value> {
     case compulsory(WritableKeyPath<Root, Value>)
 }
 
-public final class OptionalKeyPathStore<InputState, State> {
+public final class OptionalKeyPathStore<InputState, UnwrappedState> {
     internal let inputStore: AnyStore<InputState?>
-    internal let keyPath: OptionalKeyPath<InputState, State>
+    internal let keyPath: OptionalKeyPath<InputState, UnwrappedState>
     internal var downstream: [() -> Void] = []
-    var subscribers: Atomic<[ObjectIdentifier : (State?) -> Void]> = .init([:])
+    var subscribers: Atomic<[ObjectIdentifier : (UnwrappedState?) -> Void]> = .init([:])
     
-    internal init(_ inputStore: AnyStore<InputState?>, keyPath: OptionalKeyPath<InputState, State>) {
+    internal init(_ inputStore: AnyStore<InputState?>, keyPath: OptionalKeyPath<InputState, UnwrappedState>) {
         self.inputStore = inputStore
         self.keyPath = keyPath
-        //        inputStore.appendDownstream { [weak self] in self?.notifyDownstream() }
+        inputStore.appendDownstream { [weak self] in self?.notifyDownstream() }
     }
 }
 
 internal extension OptionalKeyPathStore {
-    internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, State?>) where InputStore.State == InputState? {
+    internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, UnwrappedState?>) where InputStore.State == InputState? {
         self.init(AnyStore(inputStore), keyPath: .optional(keyPath))
     }
     
-    internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, State>) where InputStore.State == InputState? {
+    internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, UnwrappedState>) where InputStore.State == InputState? {
         self.init(AnyStore(inputStore), keyPath: .compulsory(keyPath))
     }
 }
 
-//extension OptionalKeyPathStore/*: _StoreProtocol*/ {
-//    var queue: DispatchQueue { return inputStore.queue }
-//
-////    public var state: State? {
-////        switch keyPath {
-////        case .optional(let keyPath): return inputStore.state?[keyPath]
-////        case .compulsory(let keyPath): return inputStore.state?[keyPath]
-////        }
-////    }
-////
-////    func perform(_ closure: (inout State) -> Void) { inputStore.perform { closure(&$0[keyPath: keyPath]) } }
-//}
+extension OptionalKeyPathStore: _StoreProtocol, _OptionalAtomicProtocol {
+    var queue: DispatchQueue { return inputStore.queue }
+
+    public var state: UnwrappedState? {
+        switch keyPath {
+        case .optional(let keyPath): return inputStore.state?[keyPath: keyPath]
+        case .compulsory(let keyPath): return inputStore.state?[keyPath: keyPath]
+        }
+    }
+
+    func perform(_ closure: (inout UnwrappedState) -> Void) {
+        inputStore.perform {
+            inputState in
+            switch keyPath {
+            case .optional(let keyPath):
+                guard var unwrappedState = inputState?[keyPath: keyPath] else { return }
+                inputState?[keyPath: keyPath] = nil
+                closure(&unwrappedState)
+                inputState?[keyPath: keyPath] = unwrappedState
+            case .compulsory(let keyPath):
+                guard var unwrappedInputState = inputState else { return }
+                inputState = nil
+                closure(&unwrappedInputState[keyPath: keyPath])
+                inputState = unwrappedInputState
+            }
+            
+        }
+    }
+}
+
+func perform<Input, Output>(block: (inout Output?) -> Void) -> (inout Input?) -> Void {
+    
+}
 
 //public extension OptionalKeyPathStore {
 //    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {

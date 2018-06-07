@@ -15,13 +15,27 @@ public protocol AtomicProtocol {
 }
 
 internal protocol _AtomicProtocol: AtomicProtocol {
+    associatedtype MutatingState
     var queue: DispatchQueue { get }
-    func perform(_ closure: Mutator<State>)
+    func perform(_ closure: Mutator<MutatingState>)
+    static func state(mutatingState: MutatingState) -> State
 }
 
 internal extension _AtomicProtocol {
-    internal func accessAsync(_ closure: @escaping Mutator<State>) { return queue.async { self.perform(closure) } }
-    internal func access(_ closure: @escaping Mutator<State>) { return queue.sync { self.perform(closure) } }
+    internal func accessAsync(_ closure: @escaping Mutator<MutatingState>) { return queue.async { self.perform(closure) } }
+    internal func access(_ closure: @escaping Mutator<MutatingState>) { return queue.sync { self.perform(closure) } }
+}
+
+internal protocol _SimpleAtomicProtocol: _AtomicProtocol where State == MutatingState { }
+
+internal extension _SimpleAtomicProtocol {
+    static func state(mutatingState: State) -> State { return mutatingState }
+}
+
+internal protocol _OptionalAtomicProtocol: _AtomicProtocol where State == MutatingState? { }
+
+internal extension _OptionalAtomicProtocol {
+    static func state(mutatingState: MutatingState) -> MutatingState? { return mutatingState }
 }
 
 final internal class Atomic<State> {
@@ -34,7 +48,7 @@ final internal class Atomic<State> {
     }
 }
 
-extension Atomic: _AtomicProtocol {
+extension Atomic: _SimpleAtomicProtocol {
     func perform(_ closure: Mutator<State>) { closure(&_state) }
     var state: State { return queue.sync { _state } }
 }

@@ -27,7 +27,7 @@ internal extension KeyPathStore {
     }
 }
 
-extension KeyPathStore: _StoreProtocol {
+extension KeyPathStore: _StoreProtocol, _SimpleAtomicProtocol {
     var queue: DispatchQueue { return inputStore.queue }
     public var state: State { return inputStore.state[keyPath: keyPath] }
     func perform(_ closure: (inout State) -> Void) { inputStore.perform { closure(&$0[keyPath: keyPath]) } }
