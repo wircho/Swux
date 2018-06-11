@@ -1,5 +1,5 @@
 //
-//  OptionalKeyPathStore.swift
+//  OptionalSubstore.swift
 //  Swux
 //
 //  Created by Adolfo Rodriguez on 2018-06-06.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class OptionalKeyPathStore<InputState, WrappedState> {
+public final class OptionalSubstore<InputState, WrappedState> {
     internal let inputStore: AnyOptionalStore<InputState>
     internal let keyPath: WritableKeyPath<InputState, WrappedState?>
     internal var downstream: [() -> Void] = []
@@ -21,7 +21,7 @@ public final class OptionalKeyPathStore<InputState, WrappedState> {
     }
 }
 
-internal extension OptionalKeyPathStore {
+internal extension OptionalSubstore {
     internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, WrappedState?>) where InputStore.State == InputState?, InputStore.MutatingState == InputState {
         self.init(.wrapped(AnyStore(inputStore)), keyPath: keyPath)
     }
@@ -31,7 +31,9 @@ internal extension OptionalKeyPathStore {
     }
 }
 
-extension OptionalKeyPathStore: _StoreProtocol, _SimpleAtomicProtocol {
+extension OptionalSubstore: _StoreProtocol, _SimpleAtomicProtocol {
+    public typealias State = WrappedState?
+    public typealias MutatingState = WrappedState?
     var queue: DispatchQueue { return inputStore.queue }
     public var state: WrappedState? { return inputStore.state?[keyPath: keyPath] }
     
@@ -48,29 +50,19 @@ extension OptionalKeyPathStore: _StoreProtocol, _SimpleAtomicProtocol {
             }
         }
     }
+    
+    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == WrappedState? {
+        _dispatch(action, dispatchMode: dispatchMode)
+    }
 }
 
-public extension OptionalKeyPathStore {
+public extension OptionalSubstore {
     public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
         return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
     }
     
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
         return _subscribe(on: queue, triggerNow: triggerNow, closure)
-    }
-}
-
-public extension OptionalKeyPathStore {
-    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == WrappedState {
-        _dispatch(action, dispatchMode: dispatchMode)
-    }
-    
-    public func dispatch(_ state: WrappedState, dispatchMode: DispatchMode = .sync) {
-        _dispatch(state, dispatchMode: dispatchMode)
-    }
-    
-    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<WrappedState>) {
-        _dispatch(dispatchMode: dispatchMode, closure)
     }
 }
 

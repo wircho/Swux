@@ -9,30 +9,39 @@ import Foundation
 
 public typealias Mutator<T> = (inout T) -> Void
 
-public protocol AtomicProtocol {
+public protocol ReadAtomicProtocol {
     associatedtype State
     var state: State { get }
 }
 
-internal protocol _AtomicProtocol: AtomicProtocol {
+public protocol AtomicProtocol: ReadAtomicProtocol {
     associatedtype MutatingState
+}
+
+internal protocol SimpleAtomicProtocol: AtomicProtocol where State == MutatingState { }
+
+internal protocol OptionalAtomicProtocol: AtomicProtocol where State == MutatingState? { }
+
+internal protocol _ReadAtomicProtocol: ReadAtomicProtocol {}
+
+internal protocol _AtomicProtocol: AtomicProtocol, _ReadAtomicProtocol {
     var queue: DispatchQueue { get }
     func perform(_ closure: Mutator<MutatingState>)
     static func state(mutatingState: MutatingState) -> State
 }
+
+internal protocol _SimpleAtomicProtocol: SimpleAtomicProtocol, _AtomicProtocol { }
+
+internal protocol _OptionalAtomicProtocol: OptionalAtomicProtocol, _AtomicProtocol { }
 
 internal extension _AtomicProtocol {
     internal func accessAsync(_ closure: @escaping Mutator<MutatingState>) { return queue.async { self.perform(closure) } }
     internal func access(_ closure: @escaping Mutator<MutatingState>) { return queue.sync { self.perform(closure) } }
 }
 
-internal protocol _SimpleAtomicProtocol: _AtomicProtocol where State == MutatingState { }
-
 internal extension _SimpleAtomicProtocol {
     static func state(mutatingState: State) -> State { return mutatingState }
 }
-
-internal protocol _OptionalAtomicProtocol: _AtomicProtocol where State == MutatingState? { }
 
 internal extension _OptionalAtomicProtocol {
     static func state(mutatingState: MutatingState) -> MutatingState? { return mutatingState }
@@ -49,6 +58,7 @@ final internal class Atomic<State> {
 }
 
 extension Atomic: _SimpleAtomicProtocol {
+    public typealias MutatingState = State
     func perform(_ closure: Mutator<State>) { closure(&_state) }
     var state: State { return queue.sync { _state } }
 }

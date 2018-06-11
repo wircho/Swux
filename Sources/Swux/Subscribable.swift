@@ -8,12 +8,9 @@
 
 import Foundation
 
-public protocol SubscribableProtocol: AnyObject {
-    associatedtype State
-    var state: State { get }
-}
+public protocol SubscribableProtocol: AnyObject, ReadAtomicProtocol { }
 
-internal protocol _SubscribableProtocol: SubscribableProtocol {
+internal protocol _SubscribableProtocol: SubscribableProtocol, _ReadAtomicProtocol {
     var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> { get set }
 }
 

@@ -1,5 +1,5 @@
 //
-//  WrappedKeyPathStore.swift
+//  WrappedSubstore.swift
 //  Swux
 //
 //  Created by Adolfo Rodriguez on 2018-06-06.
@@ -36,7 +36,7 @@ internal extension AnyOptionalStore {
     }
 }
 
-public final class WrappedKeyPathStore<InputState, WrappedState> {
+public final class WrappedSubstore<InputState, WrappedState> {
     internal let inputStore: AnyOptionalStore<InputState>
     internal let keyPath: WritableKeyPath<InputState, WrappedState>
     internal var downstream: [() -> Void] = []
@@ -49,7 +49,7 @@ public final class WrappedKeyPathStore<InputState, WrappedState> {
     }
 }
 
-internal extension WrappedKeyPathStore {
+internal extension WrappedSubstore {
     internal convenience init<InputStore: _StoreProtocol>(_ inputStore: InputStore, keyPath: WritableKeyPath<InputState, WrappedState>) where InputStore.State == InputState?, InputStore.MutatingState == InputState {
         self.init(.wrapped(AnyStore(inputStore)), keyPath: keyPath)
     }
@@ -59,7 +59,9 @@ internal extension WrappedKeyPathStore {
     }
 }
 
-extension WrappedKeyPathStore: _StoreProtocol, _OptionalAtomicProtocol {
+extension WrappedSubstore: _StoreProtocol, _OptionalAtomicProtocol {
+    public typealias State = WrappedState?
+    public typealias MutatingState = WrappedState
     var queue: DispatchQueue { return inputStore.queue }
     public var state: WrappedState? { return inputStore.state?[keyPath: keyPath] }
     
@@ -76,9 +78,13 @@ extension WrappedKeyPathStore: _StoreProtocol, _OptionalAtomicProtocol {
             }
         }
     }
+    
+    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == WrappedState {
+        _dispatch(action, dispatchMode: dispatchMode)
+    }
 }
 
-public extension WrappedKeyPathStore {
+public extension WrappedSubstore {
     public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
         return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
     }
@@ -87,18 +93,3 @@ public extension WrappedKeyPathStore {
         return _subscribe(on: queue, triggerNow: triggerNow, closure)
     }
 }
-
-public extension WrappedKeyPathStore {
-    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == WrappedState {
-        _dispatch(action, dispatchMode: dispatchMode)
-    }
-    
-    public func dispatch(_ state: WrappedState, dispatchMode: DispatchMode = .sync) {
-        _dispatch(state, dispatchMode: dispatchMode)
-    }
-    
-    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<WrappedState>) {
-        _dispatch(dispatchMode: dispatchMode, closure)
-    }
-}
-

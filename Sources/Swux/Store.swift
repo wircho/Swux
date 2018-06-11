@@ -9,20 +9,19 @@ import Foundation
 
 public enum DispatchMode { case sync, async }
 
-public protocol StoreProtocol: AtomicProtocol, SubscribableProtocol {
-    associatedtype State
-    var state: State { get }
+public protocol ReadStoreProtocol: SubscribableProtocol { }
+
+public protocol StoreProtocol: AtomicProtocol, ReadStoreProtocol {
+    func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == MutatingState
 }
 
-internal protocol _GenericStoreProtocol: StoreProtocol, _SubscribableProtocol {
+internal protocol _ReadStoreProtocol: ReadStoreProtocol, _SubscribableProtocol {
     var downstream: [() -> Void] { get set }
 }
 
-internal protocol _ReadOnlyStoreProtocol: _GenericStoreProtocol { }
+internal protocol _StoreProtocol: StoreProtocol, _AtomicProtocol, _ReadStoreProtocol {}
 
-internal protocol _StoreProtocol: _GenericStoreProtocol, _AtomicProtocol { }
-
-internal extension _GenericStoreProtocol {
+internal extension _ReadStoreProtocol {
     internal func notifyDownstream() {
         notify()
         downstream.forEach { $0() }
@@ -41,21 +40,27 @@ internal extension _StoreProtocol {
         case .sync: access(closure)
         }
     }
+}
 
-    internal func _dispatch(_ value: MutatingState, dispatchMode: DispatchMode) {
-        _dispatch(SetAction(value), dispatchMode: dispatchMode)
-    }
-
-    internal func _dispatch(dispatchMode: DispatchMode, _ closure: @escaping Mutator<MutatingState>) {
-        _dispatch(MutateAction(closure), dispatchMode: dispatchMode)
+public extension StoreProtocol {
+    func dispatch<Action: ActionProtocol>(_ action: Action) where Action.State == MutatingState {
+        dispatch(action, dispatchMode: .sync)
     }
     
-    internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where MutatingState == Action.State? {
-        _dispatch(OptionalAction(action), dispatchMode: dispatchMode)
+    public func dispatch(_ value: MutatingState, dispatchMode: DispatchMode = .sync) {
+        dispatch(SetAction(value), dispatchMode: dispatchMode)
     }
     
-    internal func _dispatch<WrappedState>(dispatchMode: DispatchMode, _ closure: @escaping Mutator<WrappedState>) where MutatingState == WrappedState? {
-        _dispatch(MutateAction(closure), dispatchMode: dispatchMode)
+    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<MutatingState>) {
+        dispatch(MutateAction(closure), dispatchMode: dispatchMode)
+    }
+    
+    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where MutatingState == Action.State? {
+        dispatch(OptionalAction(action), dispatchMode: dispatchMode)
+    }
+    
+    public func dispatch<WrappedState>(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<WrappedState>) where MutatingState == WrappedState? {
+        dispatch(MutateAction(closure), dispatchMode: dispatchMode)
     }
 }
 
@@ -64,7 +69,7 @@ public final class Store<State> {
     internal var _state: State
     internal let queue: DispatchQueue
     internal var downstream: [() -> Void] = []
-
+    
     public init(_ state: State, queue: DispatchQueue = DispatchQueue(label: "\(State.self)", qos: DispatchQoS.userInteractive)) {
         _state = state
         self.queue = queue
@@ -72,8 +77,13 @@ public final class Store<State> {
 }
 
 extension Store: _StoreProtocol, _SimpleAtomicProtocol {
+    public typealias MutatingState = State
     public var state: State { return queue.sync { _state } }
-    func perform(_ closure: Mutator<State>) { closure(&_state) }
+    internal func perform(_ closure: Mutator<State>) { closure(&_state) }
+    
+    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == State {
+        _dispatch(action, dispatchMode: dispatchMode)
+    }
 }
 
 public extension Store {
@@ -83,27 +93,5 @@ public extension Store {
 
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
         return _subscribe(on: queue, triggerNow: triggerNow, closure)
-    }
-}
-
-public extension Store {
-    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where Action.State == State {
-        _dispatch(action, dispatchMode: dispatchMode)
-    }
-
-    public func dispatch(_ state: State, dispatchMode: DispatchMode = .sync) {
-        _dispatch(state, dispatchMode: dispatchMode)
-    }
-
-    public func dispatch(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<State>) {
-        _dispatch(dispatchMode: dispatchMode, closure)
-    }
-    
-    public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode = .sync) where State == Action.State? {
-        _dispatch(action, dispatchMode: dispatchMode)
-    }
-
-    public func dispatch<WrappedState>(dispatchMode: DispatchMode = .sync, _ closure: @escaping Mutator<WrappedState>) where State == WrappedState? {
-        _dispatch(dispatchMode: dispatchMode, closure)
     }
 }
