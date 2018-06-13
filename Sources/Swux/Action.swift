@@ -22,10 +22,10 @@ internal struct MutateAction<State>: ActionProtocol {
     func mutate(_ state: inout State) { mutator(&state) }
 }
 
-public struct OptionalAction<Action: ActionProtocol>: ActionProtocol {
+internal struct OptionalAction<Action: ActionProtocol>: ActionProtocol {
     let innerAction: Action
-    public init(_ innerAction: Action) { self.innerAction = innerAction }
-    public func mutate(_ state: inout Action.State?) {
+    init(_ innerAction: Action) { self.innerAction = innerAction }
+    func mutate(_ state: inout Action.State?) {
         guard var unwrappedState = state else { return }
         state = nil
         innerAction.mutate(&unwrappedState)
