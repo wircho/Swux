@@ -124,49 +124,11 @@ struct AppState {
 
 let store = Store<AppState?>(nil)
 ```
-
-then you may need to unwrap it before mutating it in an action mutator:
-
-```swift
-/* BAD WAY */
-struct SomeAction: ActionProtocol {
-  func mutate(_ state: inout AppState?) {
-    guard var unwrappedState = state else { return }
-    /* mutate unwrappedState */
-    state = unwrappedState
-  }
-}
-```
-
-Unfortunately this means that at some point at runtime, there are two identical instances of `State` before only one of them gets mutated. This forces the Swift compiler to create a whole other copy of `state`, which could slow down your application. One way to prevent that is to temporarily "delete" one of the copies:
-
-```swift
-/* GOOD WAY (UNFORTUNATELY) */
-struct SomeAction: ActionProtocol {
-  func mutate(_ state: inout AppState?) {
-    guard var unwrappedState = state else { return }
-    state = nil
-    /* mutate unwrappedState */
-    state = unwrappedState
-  }
-}
-```
-
-To prevent you from having to do this every time, Swux provides another protocol that inherits from `ActionProtocol`:
-
-```swift
-/* BEST WAY */
-struct SomeAction: WrappedStateActionProtocol {
-  typealias State = AppState?
-  func mutateWrapped(_ state: inout AppState) {
-    /* mutate state */
-  }
-}
-```
+you may dispatch actions whose state type is the unwrapped type `AppState`. These actions' mutators are only performed internally when the state is not `nil`.
 
 ## Enum States
 
-You can implement a similar solution as the one above for `enum` states, since Swift does not currently provide [in-place mutation of `enum` types](https://forums.swift.org/t/in-place-mutation-of-an-enum-associated-value/11747). You may define and extend one helper protocol for each case that has associated values. For example:
+Because of Swift's excluse ownership feature and copy-on-write types, you may be able to completely avoid copying your state by always performing mutations in place and avoiding multiple copies of the same structure. This is difficult to avoid for `enum` states with associated types, since Swift does not currently provide [in-place mutation of `enum` types](https://forums.swift.org/t/in-place-mutation-of-an-enum-associated-value/11747). One solution is to temporarily erase values while you mutate their local copies. You may conveniently define and extend one helper protocol for each `enum` case that has associated values. The following example illustrates this technique:
 
 ```swift
 /* STATE */
