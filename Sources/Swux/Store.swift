@@ -72,10 +72,13 @@ public final class Store<State> {
     internal var _state: State
     internal let queue: DispatchQueue
     internal let upstream: (() -> Void)? = nil
+    internal var onStateChangeSubscription: Subscription?
     
-    public init(_ state: State, queue: DispatchQueue = DispatchQueue(label: "\(State.self)", qos: DispatchQoS.userInteractive)) {
+    public init(_ state: State, queue: DispatchQueue = DispatchQueue(label: "\(State.self)", qos: DispatchQoS.userInteractive), onStateChange stateChangeSubscriber: ((State) -> Void)? = nil) {
         _state = state
         self.queue = queue
+        guard let stateChangeSubscriber = stateChangeSubscriber else { return }
+        onStateChangeSubscription = subscribeToStateChanges(stateChangeSubscriber)
     }
 }
 
