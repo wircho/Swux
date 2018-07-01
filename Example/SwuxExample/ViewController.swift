@@ -19,7 +19,7 @@ class ViewController: UIViewController, SubscriberProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard let canvasView = canvasView, let ballView = ballView else { return }
-        subscription = subscription ?? store.subscribe(self)
+        subscription = subscription ?? store.subscribeToStateChanges(self)
         store.dispatch(Start(canvasSize: canvasView.bounds.size, ballRadius: ballView.frame.size.width / 2))
     }
     

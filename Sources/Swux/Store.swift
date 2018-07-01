@@ -16,15 +16,15 @@ public protocol StoreProtocol: AtomicProtocol, ReadStoreProtocol {
 }
 
 internal protocol _ReadStoreProtocol: ReadStoreProtocol, _SubscribableProtocol {
-    var downstream: [() -> Void] { get set }
+    var upstream: (() -> Void)? { get }
 }
 
 internal protocol _StoreProtocol: StoreProtocol, _AtomicProtocol, _ReadStoreProtocol {}
 
 internal extension _ReadStoreProtocol {
-    internal func notifyDownstream() {
-        notify()
-        downstream.forEach { $0() }
+    internal func notifyUpstream() {
+        notify(subscribers: \.upstreamSubscribers)
+        upstream?()
     }
 }
 
@@ -32,8 +32,10 @@ internal extension _StoreProtocol {
     internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == MutatingState {
         let closure: Mutator<MutatingState> = { mutatingState in
             action.mutate(&mutatingState)
-            self.notify(Self.state(mutatingState: mutatingState))
-            self.downstream.forEach { $0() }
+            let state = Self.state(mutatingState: mutatingState)
+            self.notify(state, subscribers: \.actionSubscribers)
+            self.notify(state, subscribers: \.upstreamSubscribers)
+            self.upstream?()
         }
         switch dispatchMode {
         case .async: accessAsync(closure)
@@ -65,10 +67,11 @@ public extension StoreProtocol {
 }
 
 public final class Store<State> {
-    internal var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = .init([:])
+    internal var actionSubscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = .init([:])
+    internal var upstreamSubscribers: Atomic<[ObjectIdentifier: (State) -> Void]> = .init([:])
     internal var _state: State
     internal let queue: DispatchQueue
-    internal var downstream: [() -> Void] = []
+    internal let upstream: (() -> Void)? = nil
     
     public init(_ state: State, queue: DispatchQueue = DispatchQueue(label: "\(State.self)", qos: DispatchQoS.userInteractive)) {
         _state = state
@@ -87,11 +90,15 @@ extension Store: _StoreProtocol, _SimpleAtomicProtocol {
 }
 
 public extension Store {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
-        return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
+    public func subscribeToStateChanges<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
+        return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.upstreamSubscribers) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
+    }
+    
+    public func subscribeToStateChanges(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
+        return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.upstreamSubscribers, closure)
     }
 
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
-        return _subscribe(on: queue, triggerNow: triggerNow, closure)
+        return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.actionSubscribers, closure)
     }
 }

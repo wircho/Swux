@@ -18,12 +18,14 @@ internal final class _Subscription<Subscribable: _SubscribableProtocol>: Subscri
     
     func end() {
         guard let subscribable = subscribable else { return }
-        subscribable.subscribers.access { $0[ObjectIdentifier(self)] = nil }
+        subscribable.actionSubscribers.access { $0[ObjectIdentifier(self)] = nil }
+        subscribable.upstreamSubscribers.access { $0[ObjectIdentifier(self)] = nil }
     }
     
     func trigger() {
         guard let subscribable = subscribable else { return }
-        subscribable.subscribers.state[ObjectIdentifier(self)]?(subscribable.state)
+        subscribable.actionSubscribers.state[ObjectIdentifier(self)]?(subscribable.state)
+        subscribable.upstreamSubscribers.state[ObjectIdentifier(self)]?(subscribable.state)
     }
     
     deinit {

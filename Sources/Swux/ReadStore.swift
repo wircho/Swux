@@ -11,13 +11,14 @@ import Foundation
 public final class ReadStore<InputState, State> {
     internal let inputStore: AnyReadStore<InputState>
     internal let keyPath: KeyPath<InputState, State>
-    internal var downstream: [() -> Void] = []
-    var subscribers: Atomic<[ObjectIdentifier : (State) -> Void]> = .init([:])
+    internal let upstream: (() -> Void)?
+    var actionSubscribers: Atomic<[ObjectIdentifier : (State) -> Void]> = .init([:])
+    var upstreamSubscribers: Atomic<[ObjectIdentifier : (State) -> Void]> = .init([:])
     
     internal init(_ inputStore: AnyReadStore<InputState>, keyPath: KeyPath<InputState, State>) {
         self.inputStore = inputStore
         self.keyPath = keyPath
-        inputStore.appendDownstream { [weak self] in self?.notifyDownstream() }
+        upstream = inputStore.notifyUpstream
     }
 }
 
@@ -32,11 +33,7 @@ extension ReadStore: _ReadStoreProtocol {
 }
 
 public extension ReadStore {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
-        return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
-    }
-    
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
-        return _subscribe(on: queue, triggerNow: triggerNow, closure)
+        return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.actionSubscribers, closure)
     }
 }

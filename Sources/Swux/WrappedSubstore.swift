@@ -14,10 +14,10 @@ internal enum AnyOptionalStore<State> {
 }
 
 internal extension AnyOptionalStore {
-    internal func appendDownstream(_ closure: @escaping () -> Void) {
+    internal func notifyUpstream() {
         switch self {
-        case .wrapped(let store): store.appendDownstream(closure)
-        case .optional(let store): store.appendDownstream(closure)
+        case .wrapped(let store): store.notifyUpstream()
+        case .optional(let store): store.notifyUpstream()
         }
     }
     
@@ -39,13 +39,14 @@ internal extension AnyOptionalStore {
 public final class WrappedSubstore<InputState, WrappedState> {
     internal let inputStore: AnyOptionalStore<InputState>
     internal let keyPath: WritableKeyPath<InputState, WrappedState>
-    internal var downstream: [() -> Void] = []
-    var subscribers: Atomic<[ObjectIdentifier : (WrappedState?) -> Void]> = .init([:])
+    internal let upstream: (() -> Void)?
+    var actionSubscribers: Atomic<[ObjectIdentifier : (WrappedState?) -> Void]> = .init([:])
+    var upstreamSubscribers: Atomic<[ObjectIdentifier : (WrappedState?) -> Void]> = .init([:])
     
     internal init(_ inputStore: AnyOptionalStore<InputState>, keyPath: WritableKeyPath<InputState, WrappedState>) {
         self.inputStore = inputStore
         self.keyPath = keyPath
-        inputStore.appendDownstream { [weak self] in self?.notifyDownstream() }
+        upstream = inputStore.notifyUpstream
     }
 }
 
@@ -85,11 +86,7 @@ extension WrappedSubstore: _StoreProtocol, _OptionalAtomicProtocol {
 }
 
 public extension WrappedSubstore {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
-        return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
-    }
-    
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
-        return _subscribe(on: queue, triggerNow: triggerNow, closure)
+        return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.actionSubscribers, closure)
     }
 }

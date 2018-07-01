@@ -12,13 +12,13 @@ internal class AnyStore<State, MutatingState> {
     fileprivate let getQueue: () -> DispatchQueue
     fileprivate let getState: () -> State
     fileprivate let performMutator: (Mutator<MutatingState>) -> Void
-    internal let appendDownstream: (@escaping () -> Void) -> Void
+    internal let notifyUpstream: () -> Void
     
     internal init<S: _StoreProtocol>(_ store: S) where S.State == State, S.MutatingState == MutatingState {
         getQueue = { store.queue }
         getState = { store.state }
         performMutator = { store.perform($0) }
-        appendDownstream = { store.downstream.append($0) }
+        notifyUpstream = { [weak store] in store?.notifyUpstream() }
     }
 }
 

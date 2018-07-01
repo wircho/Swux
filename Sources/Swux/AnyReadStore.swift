@@ -8,11 +8,11 @@
 
 internal class AnyReadStore<State> {
     fileprivate let getState: () -> State
-    internal let appendDownstream: (@escaping () -> Void) -> Void
+    internal let notifyUpstream: () -> Void
     
     internal init<S: _ReadStoreProtocol>(_ store: S) where S.State == State {
         getState = { store.state }
-        appendDownstream = { store.downstream.append($0) }
+        notifyUpstream = { [weak store] in store?.notifyUpstream() }
     }
 }
 

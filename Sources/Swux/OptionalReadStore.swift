@@ -16,13 +16,14 @@ internal enum PossiblyOptionalKeyPath<Root, Value> {
 public final class OptionalReadStore<InputState, WrappedState> {
     internal let inputStore: AnyReadStore<InputState?>
     internal let keyPath: PossiblyOptionalKeyPath<InputState, WrappedState>
-    internal var downstream: [() -> Void] = []
-    var subscribers: Atomic<[ObjectIdentifier : (WrappedState?) -> Void]> = .init([:])
+    internal let upstream: (() -> Void)?
+    var actionSubscribers: Atomic<[ObjectIdentifier : (WrappedState?) -> Void]> = .init([:])
+    var upstreamSubscribers: Atomic<[ObjectIdentifier : (WrappedState?) -> Void]> = .init([:])
     
     internal init(_ inputStore: AnyReadStore<InputState?>, keyPath: PossiblyOptionalKeyPath<InputState, WrappedState>) {
         self.inputStore = inputStore
         self.keyPath = keyPath
-        inputStore.appendDownstream { [weak self] in self?.notifyDownstream() }
+        upstream = inputStore.notifyUpstream
     }
 }
 
@@ -46,11 +47,7 @@ extension OptionalReadStore: _ReadStoreProtocol {
 }
 
 public extension OptionalReadStore {
-    public func subscribe<Subscriber: SubscriberProtocol>(_ subscriber: Subscriber, on queue: DispatchQueue? = nil, triggerNow: Bool = false) -> Subscription where Subscriber.State == State {
-        return _subscribe(on: queue, triggerNow: triggerNow) { [weak subscriber] in subscriber?.stateChanged(to: $0) }
-    }
-    
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
-        return _subscribe(on: queue, triggerNow: triggerNow, closure)
+        return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.actionSubscribers, closure)
     }
 }

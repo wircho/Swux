@@ -11,25 +11,26 @@ import Foundation
 public protocol SubscribableProtocol: AnyObject, ReadAtomicProtocol { }
 
 internal protocol _SubscribableProtocol: SubscribableProtocol, _ReadAtomicProtocol {
-    var subscribers: Atomic<[ObjectIdentifier: (State) -> Void]> { get set }
+    var actionSubscribers: Atomic<[ObjectIdentifier: (State) -> Void]> { get set }
+    var upstreamSubscribers: Atomic<[ObjectIdentifier: (State) -> Void]> { get set }
 }
 
 internal extension _SubscribableProtocol {
-    internal func _subscribe(on queue: DispatchQueue?, triggerNow: Bool, _ closure: @escaping (State) -> Void) -> Subscription {
+    internal func _subscribe(on queue: DispatchQueue?, triggerNow: Bool, subscribers: WritableKeyPath<Self, Atomic<[ObjectIdentifier: (State) -> Void]>>, _ closure: @escaping (State) -> Void) -> Subscription {
         let closure = wrap(on: queue, closure: closure)
         let subscription = _Subscription(subscribable: self)
         if triggerNow { closure(state) }
-        subscribers.access { $0[ObjectIdentifier(subscription)] = closure }
+        self[keyPath: subscribers].access { $0[ObjectIdentifier(subscription)] = closure }
         return subscription
     }
 }
 
 internal extension _SubscribableProtocol {
-    internal func notify() {
-        notify(self.state)
+    internal func notify(subscribers: WritableKeyPath<Self, Atomic<[ObjectIdentifier: (State) -> Void]>>) {
+        notify(self.state, subscribers: subscribers)
     }
     
-    internal func notify(_ state: State) {
-        for callback in self.subscribers.state.values { callback(state) }
+    internal func notify(_ state: State, subscribers: WritableKeyPath<Self, Atomic<[ObjectIdentifier: (State) -> Void]>>) {
+        for callback in self[keyPath: subscribers].state.values { callback(state) }
     }
 }
