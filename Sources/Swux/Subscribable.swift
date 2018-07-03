@@ -20,14 +20,14 @@ internal extension _SubscribableProtocol {
         let closure = wrap(on: queue, closure: closure)
         let subscription = _Subscription(subscribable: self)
         if triggerNow { closure(state) }
-        self[keyPath: subscribers].access { $0[ObjectIdentifier(subscription)] = closure }
+        _ = self[keyPath: subscribers].access { $0[ObjectIdentifier(subscription)] = closure }
         return subscription
     }
 }
 
 internal extension _SubscribableProtocol {
     internal func notify(subscribers: WritableKeyPath<Self, Atomic<[ObjectIdentifier: (State) -> Void]>>) {
-        notify(_state, subscribers: subscribers)
+        notify(state, subscribers: subscribers)
     }
     
     internal func notify(_ state: State, subscribers: WritableKeyPath<Self, Atomic<[ObjectIdentifier: (State) -> Void]>>) {

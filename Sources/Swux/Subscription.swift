@@ -18,8 +18,8 @@ internal final class _Subscription<Subscribable: _SubscribableProtocol>: Subscri
     
     func end() {
         guard let subscribable = subscribable else { return }
-        subscribable.actionSubscribers.access { $0[ObjectIdentifier(self)] = nil }
-        subscribable.upstreamSubscribers.access { $0[ObjectIdentifier(self)] = nil }
+        _ = subscribable.actionSubscribers.access { $0[ObjectIdentifier(self)] = nil }
+        _ = subscribable.upstreamSubscribers.access { $0[ObjectIdentifier(self)] = nil }
     }
     
     func trigger() {

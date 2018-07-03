@@ -29,7 +29,6 @@ internal protocol _ReadAtomicProtocol: ReadAtomicProtocol {
 internal protocol _AtomicProtocol: AtomicProtocol, _ReadAtomicProtocol {
     var queue: DispatchQueue { get }
     func perform(_ closure: Mutator<MutatingState>)
-    static func state(mutatingState: MutatingState) -> State
 }
 
 internal protocol _SimpleAtomicProtocol: SimpleAtomicProtocol, _AtomicProtocol { }
@@ -37,16 +36,19 @@ internal protocol _SimpleAtomicProtocol: SimpleAtomicProtocol, _AtomicProtocol {
 internal protocol _OptionalAtomicProtocol: OptionalAtomicProtocol, _AtomicProtocol { }
 
 internal extension _AtomicProtocol {
-    internal func accessAsync(_ closure: @escaping Mutator<MutatingState>) { return queue.async { self.perform(closure) } }
-    internal func access(_ closure: @escaping Mutator<MutatingState>) { return queue.sync { self.perform(closure) } }
-}
-
-internal extension _SimpleAtomicProtocol {
-    static func state(mutatingState: State) -> State { return mutatingState }
-}
-
-internal extension _OptionalAtomicProtocol {
-    static func state(mutatingState: MutatingState) -> MutatingState? { return mutatingState }
+    internal func accessAsync(_ closure: @escaping Mutator<MutatingState>, callback: @escaping (State) -> Void) {
+        queue.async {
+            self.perform(closure)
+            callback(self._state)
+        }
+    }
+    internal func access(_ closure: @escaping Mutator<MutatingState>) -> State {
+        return queue.sync {
+            self.perform(closure)
+            return _state
+        }
+        
+    }
 }
 
 final internal class Atomic<State> {

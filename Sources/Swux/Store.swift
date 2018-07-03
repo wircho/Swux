@@ -30,16 +30,18 @@ internal extension _ReadStoreProtocol {
 
 internal extension _StoreProtocol {
     internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == MutatingState {
-        let closure: Mutator<MutatingState> = { mutatingState in
-            action.mutate(&mutatingState)
-            let state = Self.state(mutatingState: mutatingState)
+        let notifyClosure = { (state: State) -> Void in
             self.notify(state, subscribers: \.actionSubscribers)
             self.notify(state, subscribers: \.upstreamSubscribers)
             self.upstream?()
         }
         switch dispatchMode {
-        case .async: accessAsync(closure)
-        case .sync: access(closure)
+        case .async:
+            accessAsync(action.mutate) {
+                state in
+                DispatchQueue.main.async { notifyClosure(state) }
+            }
+        case .sync: notifyClosure(access(action.mutate))
         }
     }
 }

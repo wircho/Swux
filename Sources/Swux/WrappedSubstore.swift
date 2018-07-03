@@ -74,7 +74,7 @@ extension WrappedSubstore: _StoreProtocol, _OptionalAtomicProtocol {
     internal var _state: WrappedState? { return inputStore._state?[keyPath: keyPath] }
     public var state: WrappedState? { return inputStore.state?[keyPath: keyPath] }
     
-    func perform(_ closure: (inout WrappedState) -> Void) {
+    func perform(_ closure: Mutator<WrappedState>) {
         switch inputStore {
         case .wrapped(let inputStore): inputStore.perform { closure(&$0[keyPath: keyPath]) }
         case .optional(let inputStore):
