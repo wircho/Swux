@@ -27,7 +27,7 @@ internal extension _SubscribableProtocol {
 
 internal extension _SubscribableProtocol {
     internal func notify(subscribers: WritableKeyPath<Self, Atomic<[ObjectIdentifier: (State) -> Void]>>) {
-        notify(self.state, subscribers: subscribers)
+        notify(_state, subscribers: subscribers)
     }
     
     internal func notify(_ state: State, subscribers: WritableKeyPath<Self, Atomic<[ObjectIdentifier: (State) -> Void]>>) {

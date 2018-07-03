@@ -29,6 +29,7 @@ internal extension ReadStore {
 }
 
 extension ReadStore: _ReadStoreProtocol {
+    public var _state: State { return inputStore._state[keyPath: keyPath] }
     public var state: State { return inputStore.state[keyPath: keyPath] }
 }
 

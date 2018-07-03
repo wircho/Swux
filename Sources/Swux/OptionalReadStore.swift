@@ -38,6 +38,13 @@ internal extension OptionalReadStore {
 }
 
 extension OptionalReadStore: _ReadStoreProtocol {
+    public var _state: WrappedState? {
+        switch keyPath {
+        case .simple(let keyPath): return inputStore._state?[keyPath: keyPath]
+        case .optional(let keyPath): return inputStore._state?[keyPath: keyPath]
+        }
+    }
+    
     public var state: WrappedState? {
         switch keyPath {
         case .simple(let keyPath): return inputStore.state?[keyPath: keyPath]

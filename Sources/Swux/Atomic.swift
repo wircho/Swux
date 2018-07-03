@@ -22,7 +22,9 @@ internal protocol SimpleAtomicProtocol: AtomicProtocol where State == MutatingSt
 
 internal protocol OptionalAtomicProtocol: AtomicProtocol where State == MutatingState? { }
 
-internal protocol _ReadAtomicProtocol: ReadAtomicProtocol {}
+internal protocol _ReadAtomicProtocol: ReadAtomicProtocol {
+    var _state: State { get }
+}
 
 internal protocol _AtomicProtocol: AtomicProtocol, _ReadAtomicProtocol {
     var queue: DispatchQueue { get }

@@ -28,6 +28,13 @@ internal extension AnyOptionalStore {
         }
     }
     
+    internal var _state: State? {
+        switch self {
+        case .wrapped(let store): return store._state
+        case .optional(let store): return store._state
+        }
+    }
+    
     internal var state: State? {
         switch self {
         case .wrapped(let store): return store.state
@@ -64,6 +71,7 @@ extension WrappedSubstore: _StoreProtocol, _OptionalAtomicProtocol {
     public typealias State = WrappedState?
     public typealias MutatingState = WrappedState
     var queue: DispatchQueue { return inputStore.queue }
+    internal var _state: WrappedState? { return inputStore._state?[keyPath: keyPath] }
     public var state: WrappedState? { return inputStore.state?[keyPath: keyPath] }
     
     func perform(_ closure: (inout WrappedState) -> Void) {

@@ -36,6 +36,7 @@ extension OptionalSubstore: _StoreProtocol, _SimpleAtomicProtocol {
     public typealias State = WrappedState?
     public typealias MutatingState = WrappedState?
     var queue: DispatchQueue { return inputStore.queue }
+    public var _state: WrappedState? { return inputStore._state?[keyPath: keyPath] }
     public var state: WrappedState? { return inputStore.state?[keyPath: keyPath] }
     
     func perform(_ closure: (inout WrappedState?) -> Void) {

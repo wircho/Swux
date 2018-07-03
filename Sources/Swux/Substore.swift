@@ -31,6 +31,7 @@ internal extension Substore {
 extension Substore: _StoreProtocol, _SimpleAtomicProtocol {
     public typealias MutatingState = State
     var queue: DispatchQueue { return inputStore.queue }
+    public var _state: State { return inputStore._state[keyPath: keyPath] }
     public var state: State { return inputStore.state[keyPath: keyPath] }
     func perform(_ closure: (inout State) -> Void) { inputStore.perform { closure(&$0[keyPath: keyPath]) } }
     
