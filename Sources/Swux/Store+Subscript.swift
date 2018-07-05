@@ -45,8 +45,8 @@ public extension Substore {
         return .init(self, keyPath: keyPath)
     }
     
-    public subscript<OutputState>(_ keyPath: WritableKeyPath<State, OutputState>) -> Substore<InputState, OutputState> {
-        return .init(self.inputStore, keyPath: self.keyPath.appending(path: keyPath))
+    public subscript<OutputState>(_ keyPath: WritableKeyPath<State, OutputState>) -> Substore<State, OutputState> {
+        return .init(self, keyPath: keyPath)
     }
     
     public subscript<WrappedState, OutputState>(_ keyPath: WritableKeyPath<WrappedState, OutputState>) -> WrappedSubstore<WrappedState, OutputState> where State == WrappedState? {
@@ -67,12 +67,12 @@ public extension WrappedSubstore {
         return .init(self, keyPath: keyPath)
     }
 
-    public subscript<OutputState>(_ keyPath: WritableKeyPath<WrappedState, OutputState>) -> WrappedSubstore<InputState, OutputState> {
-        return .init(self.inputStore, keyPath: self.keyPath.appending(path: keyPath))
+    public subscript<OutputState>(_ keyPath: WritableKeyPath<WrappedState, OutputState>) -> WrappedSubstore<WrappedState, OutputState> {
+        return .init(self, keyPath: keyPath)
     }
     
-    public subscript<OutputState>(_ keyPath: WritableKeyPath<WrappedState, OutputState?>) -> OptionalSubstore<InputState, OutputState> {
-        return .init(self.inputStore, keyPath: self.keyPath.appending(path: keyPath))
+    public subscript<OutputState>(_ keyPath: WritableKeyPath<WrappedState, OutputState?>) -> OptionalSubstore<WrappedState, OutputState> {
+        return .init(self, keyPath: keyPath)
     }
 }
 
@@ -95,8 +95,8 @@ public extension OptionalSubstore {
 }
 
 public extension ReadStore {
-    public subscript<OutputState>(_ keyPath: KeyPath<State, OutputState>) -> ReadStore<InputState, OutputState> {
-        return .init(inputStore, keyPath: self.keyPath.appending(path: keyPath))
+    public subscript<OutputState>(_ keyPath: KeyPath<State, OutputState>) -> ReadStore<State, OutputState> {
+        return .init(self, keyPath: keyPath)
     }
     
     public subscript<WrappedInputState, OutputState>(_ keyPath: KeyPath<WrappedInputState, OutputState>) -> OptionalReadStore<WrappedInputState, OutputState> where State == WrappedInputState? {
