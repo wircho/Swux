@@ -41,6 +41,10 @@ extension Substore: _StoreProtocol, _SimpleAtomicProtocol {
 }
 
 public extension Substore {
+    public func subscribeToDownstreamStateChanges(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
+        return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.upstreamSubscribers, closure)
+    }
+    
     public func subscribe(on queue: DispatchQueue? = nil, triggerNow: Bool = false, _ closure: @escaping (State) -> Void) -> Subscription {
         return _subscribe(on: queue, triggerNow: triggerNow, subscribers: \.actionSubscribers, closure)
     }
