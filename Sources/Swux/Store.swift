@@ -29,19 +29,25 @@ internal extension _ReadStoreProtocol {
 }
 
 internal extension _StoreProtocol {
+    private func _notify(_ state: State, continueUpstream: Bool = true) {
+        notify(state, subscribers: \.actionSubscribers)
+        notify(state, subscribers: \.upstreamSubscribers)
+        guard continueUpstream else { return }
+        upstream?()
+    }
+    
+    internal func _trigger(upstream: Bool) {
+        _notify(state, continueUpstream: upstream)
+    }
+    
     internal func _dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == MutatingState {
-        let notifyClosure = { (state: State) -> Void in
-            self.notify(state, subscribers: \.actionSubscribers)
-            self.notify(state, subscribers: \.upstreamSubscribers)
-            self.upstream?()
-        }
         switch dispatchMode {
         case .async:
             accessAsync(action.mutate) {
                 state in
-                DispatchQueue.main.async { notifyClosure(state) }
+                DispatchQueue.main.async { self._notify(state) }
             }
-        case .sync: notifyClosure(access(action.mutate))
+        case .sync: _notify(access(action.mutate))
         }
     }
 }
@@ -91,6 +97,10 @@ extension Store: _StoreProtocol, _SimpleAtomicProtocol {
     
     public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == State {
         _dispatch(action, dispatchMode: dispatchMode)
+    }
+    
+    public func trigger(upstream: Bool = true) {
+        _trigger(upstream: upstream)
     }
 }
 

@@ -56,6 +56,10 @@ extension OptionalSubstore: _StoreProtocol, _SimpleAtomicProtocol {
     public func dispatch<Action: ActionProtocol>(_ action: Action, dispatchMode: DispatchMode) where Action.State == WrappedState? {
         _dispatch(action, dispatchMode: dispatchMode)
     }
+    
+    public func trigger(upstream: Bool = true) {
+        _trigger(upstream: upstream)
+    }
 }
 
 public extension OptionalSubstore {
